@@ -1,0 +1,5 @@
+{
+  "name": "Event Guest Manager",
+  "description": "A web application to manage an event guest list. It allows viewing, searching, and updating the attendance status of guests, providing a clear overview of event attendees.",
+  "requestFramePermissions": []
+}
