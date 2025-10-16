@@ -10,6 +10,7 @@ import {
   HttpCode,
   HttpStatus,
   ParseIntPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { GuestsService } from './guests.service';
 import { CreateGuestDto } from './dto/create-guest.dto';
@@ -20,8 +21,10 @@ import {
   BulkUpdatePastorDto,
   BulkDeleteDto,
 } from './dto/bulk-operation.dto';
+import { CacheInterceptor } from '../cache/cache.interceptor';
 
 @Controller('guests')
+@UseInterceptors(CacheInterceptor)
 export class GuestsController {
   constructor(private readonly guestsService: GuestsService) {}
 

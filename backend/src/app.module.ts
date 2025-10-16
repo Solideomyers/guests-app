@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { GuestsModule } from './guests/guests.module';
 import { ExportsModule } from './exports/exports.module';
+import { CacheModule } from './cache/cache.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ExportsModule } from './exports/exports.module';
     PrismaModule,
     GuestsModule,
     ExportsModule,
+    CacheModule,
   ],
   controllers: [AppController],
   providers: [AppService],

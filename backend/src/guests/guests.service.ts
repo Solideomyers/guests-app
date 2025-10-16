@@ -4,6 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { CacheService } from '../cache/cache.service';
 import { CreateGuestDto } from './dto/create-guest.dto';
 import { UpdateGuestDto } from './dto/update-guest.dto';
 import { FilterGuestDto } from './dto/filter-guest.dto';
@@ -16,7 +17,10 @@ import { GuestStatus, Prisma } from '@prisma/client';
 
 @Injectable()
 export class GuestsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private cacheService: CacheService,
+  ) {}
 
   /**
    * Create a new guest
@@ -45,6 +49,9 @@ export class GuestsService {
 
     // Create history entry
     await this.createHistoryEntry(guest.id, 'CREATE', null, null, null);
+
+    // Invalidate cache
+    await this.invalidateGuestsCache();
 
     return guest;
   }
@@ -208,6 +215,9 @@ export class GuestsService {
       );
     }
 
+    // Invalidate cache
+    await this.invalidateGuestsCache();
+
     return updated;
   }
 
@@ -223,6 +233,9 @@ export class GuestsService {
     });
 
     await this.createHistoryEntry(id, 'DELETE', null, null, null);
+
+    // Invalidate cache
+    await this.invalidateGuestsCache();
 
     return { message: 'Guest deleted successfully', id: deleted.id };
   }
@@ -281,6 +294,9 @@ export class GuestsService {
       );
     }
 
+    // Invalidate cache
+    await this.invalidateGuestsCache();
+
     return {
       message: `${updated.count} guests updated successfully`,
       count: updated.count,
@@ -300,6 +316,9 @@ export class GuestsService {
       },
       data: { isPastor },
     });
+
+    // Invalidate cache
+    await this.invalidateGuestsCache();
 
     return {
       message: `${updated.count} guests updated successfully`,
@@ -325,6 +344,9 @@ export class GuestsService {
     for (const id of ids) {
       await this.createHistoryEntry(id, 'DELETE', null, null, null);
     }
+
+    // Invalidate cache
+    await this.invalidateGuestsCache();
 
     return {
       message: `${deleted.count} guests deleted successfully`,
@@ -416,5 +438,12 @@ export class GuestsService {
         totalPages: Math.ceil(total / limit),
       },
     };
+  }
+
+  /**
+   * Invalidate all guests-related cache
+   */
+  private async invalidateGuestsCache(): Promise<void> {
+    await this.cacheService.invalidatePattern('cache:/api/v1/guests*');
   }
 }
