@@ -4,6 +4,7 @@ import { Guest, AttendanceStatus } from '../types';
 interface GuestRowProps {
   guest: Guest;
   onUpdateStatus: (id: number, status: AttendanceStatus) => void;
+  onTogglePastorStatus: (id: number, isPastor: boolean) => void;
   isSelected: boolean;
   onSelect: () => void;
   onDelete: () => void;
@@ -19,6 +20,7 @@ const statusClasses: Record<AttendanceStatus, string> = {
 const GuestRow: React.FC<GuestRowProps> = ({
   guest,
   onUpdateStatus,
+  onTogglePastorStatus,
   isSelected,
   onSelect,
   onDelete,
@@ -35,17 +37,28 @@ const GuestRow: React.FC<GuestRowProps> = ({
           aria-label={`Select guest ${guest.firstName}`}
         />
       </td>
-      <td className="px-6 py-4 whitespace-nowrap">
+      <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
         <div className="text-sm font-medium text-slate-900">{`${guest.firstName} ${guest.lastName}`}</div>
         <div className="text-sm text-slate-500">{guest.phone || 'Sin teléfono'}</div>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{guest.church}</td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{guest.city}</td>
-      <td className="px-6 py-4 whitespace-nowrap">
+      <td className="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-slate-500">{guest.church}</td>
+      <td className="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-slate-500">{guest.city}</td>
+      <td className="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-slate-500">{guest.phone}</td>
+      <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
+        <input
+          type="checkbox"
+          className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+          checked={guest.isPastor}
+          onChange={(e) => onTogglePastorStatus(guest.id, e.target.checked)}
+          onClick={(e) => e.stopPropagation()}
+          aria-label={`Mark ${guest.firstName} as pastor`}
+        />
+      </td>
+      <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
         <select
           value={guest.status}
           onChange={(e) => onUpdateStatus(guest.id, e.target.value as AttendanceStatus)}
-          className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 border-transparent ${statusClasses[guest.status]}`}
+          className={`w-32 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 border-transparent ${statusClasses[guest.status]}`}
           onClick={(e) => e.stopPropagation()}
         >
           <option value={AttendanceStatus.PENDING}>Pendiente</option>
@@ -53,7 +66,7 @@ const GuestRow: React.FC<GuestRowProps> = ({
           <option value={AttendanceStatus.DECLINED}>Rechazado</option>
         </select>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+      <td className="px-2 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
         <button onClick={onEdit} className="text-blue-600 hover:text-blue-900 p-1" aria-label={`Edit ${guest.firstName}`}>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
         </button>

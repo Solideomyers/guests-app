@@ -7,6 +7,7 @@ interface GuestTableProps {
   onSort: (key: SortableGuestKeys) => void;
   sortConfig: SortConfig;
   onUpdateStatus: (id: number, status: AttendanceStatus) => void;
+  onTogglePastorStatus: (id: number, isPastor: boolean) => void;
   onSelectGuest: (id: number) => void;
   selectedGuests: Set<number>;
   onSelectAll: () => void;
@@ -27,7 +28,7 @@ const TableHeader: React.FC<{
   return (
     <th
       scope="col"
-      className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer"
+      className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider cursor-pointer"
       onClick={() => onSort(columnKey)}
     >
       {title} <span className="text-slate-400">{sortIcon}</span>
@@ -40,6 +41,7 @@ const GuestTable: React.FC<GuestTableProps> = ({
   onSort,
   sortConfig,
   onUpdateStatus,
+  onTogglePastorStatus,
   onSelectGuest,
   selectedGuests,
   onSelectAll,
@@ -64,10 +66,14 @@ const GuestTable: React.FC<GuestTableProps> = ({
             <TableHeader onSort={onSort} sortConfig={sortConfig} columnKey="firstName" title="Nombre" />
             <TableHeader onSort={onSort} sortConfig={sortConfig} columnKey="church" title="Iglesia" />
             <TableHeader onSort={onSort} sortConfig={sortConfig} columnKey="city" title="Ciudad" />
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+            <TableHeader onSort={onSort} sortConfig={sortConfig} columnKey="phone" title="Teléfono" />
+             <th scope="col" className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+              Pastor
+            </th>
+            <th scope="col" className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
               Estado
             </th>
-            <th scope="col" className="relative px-6 py-3">
+            <th scope="col" className="relative px-2 sm:px-6 py-3">
               <span className="sr-only">Acciones</span>
             </th>
           </tr>
@@ -79,6 +85,7 @@ const GuestTable: React.FC<GuestTableProps> = ({
                 key={guest.id}
                 guest={guest}
                 onUpdateStatus={onUpdateStatus}
+                onTogglePastorStatus={onTogglePastorStatus}
                 isSelected={selectedGuests.has(guest.id)}
                 onSelect={() => onSelectGuest(guest.id)}
                 onDelete={() => onDeleteGuest(guest.id)}
@@ -87,7 +94,7 @@ const GuestTable: React.FC<GuestTableProps> = ({
             ))
           ) : (
             <tr>
-              <td colSpan={6} className="px-6 py-12 text-center text-sm text-slate-500">
+              <td colSpan={8} className="px-6 py-12 text-center text-sm text-slate-500">
                 No se encontraron invitados que coincidan con su búsqueda.
               </td>
             </tr>
