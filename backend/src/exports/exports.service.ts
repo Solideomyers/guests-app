@@ -10,23 +10,26 @@ export class ExportsService {
    */
   async exportToCSV(guests: Guest[]): Promise<string> {
     // Convert data to CSV format manually
-    const header = 'ID,Nombre,Apellido,Dirección,Estado,Ciudad,Iglesia,Teléfono,Estado,Pastor,Notas,Fecha Creación\n';
-    const rows = guests.map(guest => {
-      return [
-        guest.id,
-        this.escapeCSV(guest.firstName),
-        this.escapeCSV(guest.lastName || ''),
-        this.escapeCSV(guest.address || ''),
-        this.escapeCSV(guest.state || ''),
-        this.escapeCSV(guest.city || ''),
-        this.escapeCSV(guest.church || ''),
-        this.escapeCSV(guest.phone || ''),
-        guest.status,
-        guest.isPastor ? 'Sí' : 'No',
-        this.escapeCSV(guest.notes || ''),
-        guest.createdAt.toISOString().split('T')[0],
-      ].join(',');
-    }).join('\n');
+    const header =
+      'ID,Nombre,Apellido,Dirección,Estado,Ciudad,Iglesia,Teléfono,Estado,Pastor,Notas,Fecha Creación\n';
+    const rows = guests
+      .map((guest) => {
+        return [
+          guest.id,
+          this.escapeCSV(guest.firstName),
+          this.escapeCSV(guest.lastName || ''),
+          this.escapeCSV(guest.address || ''),
+          this.escapeCSV(guest.state || ''),
+          this.escapeCSV(guest.city || ''),
+          this.escapeCSV(guest.church || ''),
+          this.escapeCSV(guest.phone || ''),
+          guest.status,
+          guest.isPastor ? 'Sí' : 'No',
+          this.escapeCSV(guest.notes || ''),
+          guest.createdAt.toISOString().split('T')[0],
+        ].join(',');
+      })
+      .join('\n');
 
     return header + rows;
   }
@@ -39,7 +42,7 @@ export class ExportsService {
       const doc = new PDFDocument({
         size: 'A4',
         layout: 'landscape',
-        margins: { top: 50, bottom: 50, left: 50, right: 50 }
+        margins: { top: 50, bottom: 50, left: 50, right: 50 },
       });
 
       const buffers: Buffer[] = [];
@@ -50,7 +53,11 @@ export class ExportsService {
       // Title
       doc.fontSize(18).text('Lista de Invitados', { align: 'center' });
       doc.moveDown();
-      doc.fontSize(10).text(`Generado: ${new Date().toLocaleDateString('es-ES')}`, { align: 'center' });
+      doc
+        .fontSize(10)
+        .text(`Generado: ${new Date().toLocaleDateString('es-ES')}`, {
+          align: 'center',
+        });
       doc.moveDown(2);
 
       // Table headers
@@ -59,9 +66,19 @@ export class ExportsService {
       const colWidth = 80;
       let x = 50;
 
-      const headers = ['Nombre', 'Iglesia', 'Ciudad', 'Teléfono', 'Estado', 'Pastor'];
+      const headers = [
+        'Nombre',
+        'Iglesia',
+        'Ciudad',
+        'Teléfono',
+        'Estado',
+        'Pastor',
+      ];
       headers.forEach((header, i) => {
-        doc.text(header, x + (i * colWidth), startY, { width: colWidth, align: 'left' });
+        doc.text(header, x + i * colWidth, startY, {
+          width: colWidth,
+          align: 'left',
+        });
       });
 
       doc.moveDown();
@@ -90,10 +107,10 @@ export class ExportsService {
         ];
 
         rowData.forEach((data, i) => {
-          doc.text(data, x + (i * colWidth), doc.y, { 
-            width: colWidth - 5, 
+          doc.text(data, x + i * colWidth, doc.y, {
+            width: colWidth - 5,
             align: 'left',
-            continued: i < rowData.length - 1 
+            continued: i < rowData.length - 1,
           });
         });
 
@@ -105,12 +122,11 @@ export class ExportsService {
       const pages = doc.bufferedPageRange();
       for (let i = 0; i < pages.count; i++) {
         doc.switchToPage(i);
-        doc.fontSize(8).text(
-          `Página ${i + 1} de ${pages.count}`,
-          50,
-          doc.page.height - 50,
-          { align: 'center' }
-        );
+        doc
+          .fontSize(8)
+          .text(`Página ${i + 1} de ${pages.count}`, 50, doc.page.height - 50, {
+            align: 'center',
+          });
       }
 
       doc.end();
@@ -122,7 +138,7 @@ export class ExportsService {
    */
   private escapeCSV(value: string): string {
     if (!value) return '';
-    
+
     // If value contains comma, quotes, or newlines, wrap in quotes
     if (value.includes(',') || value.includes('"') || value.includes('\n')) {
       // Escape quotes by doubling them

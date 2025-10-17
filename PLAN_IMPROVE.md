@@ -99,6 +99,52 @@ backend/
 │   │   ├── cache.module.ts
 │   │   └── cache.config.ts
 │   │
+│   ├── exports/                     # Export module  
+│   │   ├── exports.controller.ts
+│   │   ├── exports.service.ts
+│   │   └── exports.module.ts
+│   │
+│   └── prisma/                      # Prisma module
+│       ├── prisma.service.ts
+│       └── prisma.module.ts
+│
+└── prisma/
+    ├── schema.prisma
+    ├── migrations/
+    └── seed.ts
+```
+
+### Estructura Frontend (React)
+
+```
+frontend/
+├── api/                             # API services
+│   ├── guests.ts                    # Guest API client
+│   └── types.ts                     # TypeScript interfaces
+│
+├── lib/                             # Library configurations
+│   ├── query-client.ts              # TanStack Query setup
+│   └── api-client.ts                # Axios configuration
+│
+├── components/                      # React components
+│   ├── Header.tsx
+│   ├── GuestTable.tsx
+│   ├── StatsCard.tsx
+│   └── ...
+│
+├── hooks/                           # Custom React hooks
+│   └── useGuests.ts
+│
+├── stores/                          # Zustand stores
+│   └── uiStore.ts
+│
+├── utils/                           # Utility functions
+│   └── formatters.ts
+│
+├── App.tsx                          # Main component
+├── index.tsx                        # Entry point
+└── vite.config.ts                   # Vite configuration
+```
 │   ├── export/                      # Export module
 │   │   ├── export.controller.ts
 │   │   ├── export.service.ts
@@ -555,23 +601,70 @@ enum GuestStatus {
 | 1.2 Modelado DB | 🟢 Completado | 3/3 tareas | 2025-10-16 | 2025-10-16 |
 | 1.3 API CRUD | 🟢 Completado | 5/5 tareas | 2025-10-16 | 2025-10-16 |
 | 1.4 Features API | 🟢 Completado | 4/4 tareas | 2025-10-16 | 2025-10-16 |
-| 1.5 Cache Redis | � Completado | 4/4 tareas | 2025-10-16 | 2025-10-16 |
-| **Fase 2: Frontend** | 🔴 No iniciado | 0% | - | - |
-| 2.1 Setup | 🔴 | 0/3 tareas | - | - |
-| 2.2 Reestructuración | 🔴 | 0/4 tareas | - | - |
-| 2.3 Zustand | 🔴 | 0/3 tareas | - | - |
-| 2.4 TanStack Query | 🔴 | 0/5 tareas | - | - |
-| 2.5 UI Components | 🔴 | 0/5 tareas | - | - |
+| 1.5 Cache Redis | 🟢 Completado | 4/4 tareas | 2025-10-16 | 2025-10-16 |
+| **Fase 2: Frontend** | 🟡 En progreso | 20% | 2025-10-16 | - |
+| 2.1 Setup | 🟢 Completado | 4/4 tareas | 2025-10-16 | 2025-10-17 |
+| 2.2 Reestructuración | 🔴 Pendiente | 0/4 tareas | - | - |
+| 2.3 Zustand | 🔴 Pendiente | 0/3 tareas | - | - |
+| 2.4 TanStack Query | 🔴 Pendiente | 0/5 tareas | - | - |
+| 2.5 UI Components | 🔴 Pendiente | 0/5 tareas | - | - |
 | **Fase 3: Features** | 🔴 No iniciado | 0% | - | - |
-| 3.1 Exportaciones | 🔴 | 0/4 tareas | - | - |
-| 3.2 Analytics | 🔴 | 0/3 tareas | - | - |
-| 3.3 Auditoría | 🔴 | 0/3 tareas | - | - |
-| 3.4 Testing | 🔴 | 0/4 tareas | - | - |
+| 3.1 Exportaciones | 🔴 Pendiente | 0/4 tareas | - | - |
+| 3.2 Analytics | 🔴 Pendiente | 0/3 tareas | - | - |
+| 3.3 Auditoría | 🔴 Pendiente | 0/3 tareas | - | - |
+| 3.4 Testing | 🔴 Pendiente | 0/4 tareas | - | - |
 | **Fase 4: Polish** | 🔴 No iniciado | 0% | - | - |
-| 4.1 Performance | 🔴 | 0/4 tareas | - | - |
-| 4.2 Security | 🔴 | 0/4 tareas | - | - |
-| 4.3 Documentation | 🔴 | 0/4 tareas | - | - |
-| 4.4 Deployment | 🔴 | 0/5 tareas | - | - |
+| 4.1 Performance | 🔴 Pendiente | 0/4 tareas | - | - |
+| 4.2 Security | 🔴 Pendiente | 0/4 tareas | - | - |
+| 4.3 Documentation | 🔴 Pendiente | 0/4 tareas | - | - |
+| 4.4 Deployment | 🔴 Pendiente | 0/5 tareas | - | - |
+
+### ✅ Correcciones Recientes (2025-10-17)
+
+#### Corrección de Estructura del Proyecto
+- **Problema:** Directorio `backend/frontend/` creado por error con archivos del backend
+- **Solución:** Todos los archivos movidos correctamente:
+  - `.env`, `.env.example` → `backend/`
+  - `tsconfig.json`, `package.json` → `backend/`
+  - Eliminado directorio `backend/frontend/` y sus `node_modules/`
+
+#### Actualización del Seed
+- **Problema:** `seed.ts` solo tenía 20 de 71 invitados
+- **Solución:** Actualizado con los 71 invitados completos de `constants.ts`
+- **Acción Requerida:** Ejecutar `npm run seed` en el backend para poblar la base de datos
+
+#### Estado de la Base de Datos
+- ⚠️ **PENDIENTE:** La base de datos Neon PostgreSQL aún no ha sido poblada con los datos iniciales
+- ⚠️ **PENDIENTE:** Verificar que las operaciones CRUD desde el frontend se registren en la base de datos real
+
+### 📋 Tareas Inmediatas Antes de Fase 2.2
+
+1. **Poblar Base de Datos:**
+   ```bash
+   cd backend
+   npx prisma db push    # Sincronizar schema con Neon
+   npm run seed          # Cargar 71 invitados
+   ```
+
+2. **Verificar Conexión Backend-Frontend:**
+   - Crear un invitado desde la aplicación
+   - Verificar que se guarde en Neon PostgreSQL
+   - Confirmar que las estadísticas reflejen datos reales
+
+3. **Iniciar Servicios:**
+   ```bash
+   # Terminal 1 - Backend
+   cd backend
+   npm run start:dev
+   
+   # Terminal 2 - Frontend
+   cd frontend
+   npm run dev
+   
+   # Terminal 3 - Redis (Docker)
+   cd backend
+   docker-compose up -d
+   ```
 
 **Leyenda de Estados:**
 - 🔴 No iniciado
