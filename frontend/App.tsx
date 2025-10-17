@@ -121,9 +121,7 @@ function AppContent() {
   // ========================================
   const {
     searchQuery,
-    setSearchQuery,
     statusFilter,
-    setStatusFilter,
     currentPage,
     setCurrentPage,
     pageSize,
@@ -131,10 +129,8 @@ function AppContent() {
     toggleGuestSelection,
     selectAllGuests,
     clearSelection,
-    isAddModalOpen,
     openAddModal,
     closeAddModal,
-    isEditModalOpen,
     editingGuestId,
     openEditModal,
     closeEditModal,
@@ -204,15 +200,6 @@ function AppContent() {
   // ========================================
   // Event Handlers
   // ========================================
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleFilterChange = (status: AttendanceStatus | 'All') => {
-    const backendStatus = mapStatusFilterToBackend(status);
-    setStatusFilter(backendStatus);
-  };
-
   const handleSort = (key: string) => {
     const newOrder = sortBy === key && sortOrder === 'asc' ? 'desc' : 'asc';
     setSorting(key, newOrder);
@@ -581,7 +568,7 @@ function AppContent() {
               />
             ) : (
               <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
-                <SearchBar value={searchQuery} onChange={handleSearchChange} />
+                <SearchBar />
                 <div className='flex flex-col sm:flex-row items-center gap-2'>
                   <ExportButtons
                     onExportCSV={handleExportCSV}
@@ -612,10 +599,7 @@ function AppContent() {
             )}
 
             {/* Status Filter */}
-            <StatusFilter
-              activeFilter={mapStatusFilterToFrontend(statusFilter)}
-              onFilterChange={handleFilterChange}
-            />
+            <StatusFilter />
           </div>
 
           {/* Guest Table */}
@@ -650,12 +634,7 @@ function AppContent() {
       </main>
 
       {/* Add/Edit Modal */}
-      <AddGuestModal
-        isOpen={isAddModalOpen || isEditModalOpen}
-        onClose={isEditModalOpen ? closeEditModal : closeAddModal}
-        onSave={handleSaveGuest}
-        guestToEdit={guestToEdit}
-      />
+      <AddGuestModal onSave={handleSaveGuest} guestToEdit={guestToEdit} />
 
       <ScrollToTopButton />
     </div>

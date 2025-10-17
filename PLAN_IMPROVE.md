@@ -609,10 +609,10 @@ enum GuestStatus {
 | 1.3 API CRUD | 🟢 Completado | 5/5 tareas | 2025-10-16 | 2025-10-16 |
 | 1.4 Features API | 🟢 Completado | 4/4 tareas | 2025-10-16 | 2025-10-16 |
 | 1.5 Cache Redis | 🟢 Completado | 4/4 tareas | 2025-10-16 | 2025-10-16 |
-| **Fase 2: Frontend** | 🟡 En progreso | 20% | 2025-10-16 | - |
+| **Fase 2: Frontend** | 🟡 En progreso | 65% | 2025-10-16 | - |
 | 2.1 Setup | 🟢 Completado | 4/4 tareas | 2025-10-16 | 2025-10-17 |
-| 2.2 Reestructuración | 🔴 Pendiente | 0/4 tareas | - | - |
-| 2.3 Zustand | 🔴 Pendiente | 0/3 tareas | - | - |
+| 2.2 Custom Hooks + Zustand Store | 🟢 Completado | 7/7 hooks + store | 2025-10-17 | 2025-10-17 |
+| 2.3 Integración Zustand | 🟢 Completado | 4/4 componentes | 2025-10-17 | 2025-10-17 |
 | 2.4 TanStack Query | 🔴 Pendiente | 0/5 tareas | - | - |
 | 2.5 UI Components | 🔴 Pendiente | 0/5 tareas | - | - |
 | **Fase 3: Features** | 🔴 No iniciado | 0% | - | - |
