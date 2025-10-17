@@ -24,12 +24,8 @@ export const apiClient = axios.create({
  */
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Add timestamp to prevent caching issues
-    if (config.params) {
-      config.params._t = Date.now();
-    } else {
-      config.params = { _t: Date.now() };
-    }
+    // Note: Modern browsers handle HTTP caching correctly with Cache-Control headers
+    // No need to add cache-busting timestamps
 
     // Log request in development
     if (import.meta.env.DEV) {

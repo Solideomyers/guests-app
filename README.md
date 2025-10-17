@@ -203,6 +203,25 @@ npm run test
 - [Backend Exports](backend/src/exports/README.md) - Export module
 - [Backend Guests](backend/src/guests/README.md) - Guests API
 - [Plan de Mejoras](PLAN_IMPROVE.md) - Implementation roadmap
+- [HTTPS Security](HTTPS_SECURITY.md) - Security configuration for production
+
+## ⚠️ Known Development Warnings
+
+### HTTPS Warning on Exports
+
+During local development, you may see this warning in the browser console when exporting PDFs:
+
+```
+The file at 'blob:http://...' was loaded over an insecure connection. 
+This file should be served over HTTPS.
+```
+
+**This is expected behavior in development and can be safely ignored.** The warning appears because:
+- The app runs on `http://` (not `https://`) in local development
+- Blob URLs used for downloads trigger browser security warnings
+- No data is exposed or at risk in your local environment
+
+**For production deployment**, HTTPS **MUST** be configured. See [HTTPS_SECURITY.md](HTTPS_SECURITY.md) for complete setup instructions.
 
 ## 🤝 Contributing
 

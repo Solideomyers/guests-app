@@ -14,9 +14,15 @@ async function bootstrap() {
     'http://localhost:5173',
   );
 
-  // Enable CORS
+  // Enable CORS for multiple origins (localhost and network IP)
   app.enableCors({
-    origin: corsOrigin,
+    origin: [
+      corsOrigin,
+      'http://localhost:5173',
+      'http://localhost:3001',
+      'http://10.147.1.122:3001',
+      /^http:\/\/10\.\d+\.\d+\.\d+:\d+$/, // Allow any local network IP
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });

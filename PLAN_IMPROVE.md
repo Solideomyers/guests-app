@@ -573,6 +573,13 @@ enum GuestStatus {
 - [ ] Input sanitization
 - [ ] SQL injection prevention (Prisma lo maneja)
 - [ ] XSS prevention
+- [ ] **🔒 HTTPS Configuration (CRÍTICO)**
+  - [ ] Configurar certificados SSL/TLS para producción
+  - [ ] Eliminar advertencia de conexión insegura en exportaciones
+  - [ ] Forzar HTTPS redirect en backend y frontend
+  - [ ] Validar que todos los endpoints usen protocolo seguro
+  - [ ] Configurar HSTS (HTTP Strict Transport Security)
+  - **Contexto:** Durante desarrollo local, las exportaciones generan advertencia `loaded over an insecure connection`. En producción esto DEBE resolverse con HTTPS obligatorio.
 
 ##### 4.3 Documentation (1 día)
 - [ ] README actualizado
