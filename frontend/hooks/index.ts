@@ -10,3 +10,5 @@ export {
   useBulkUpdatePastor,
   useBulkDelete,
 } from './useBulkOperations';
+export { usePrefetchGuests } from './usePrefetchGuests';
+export { useBackgroundStatsRefresh } from './useBackgroundStatsRefresh';

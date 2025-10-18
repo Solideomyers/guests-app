@@ -1,5 +1,6 @@
 import React from 'react';
 import { Guest, AttendanceStatus } from '../types';
+import { usePrefetchGuests } from '../hooks';
 
 interface GuestRowProps {
   guest: Guest;

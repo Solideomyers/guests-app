@@ -7,6 +7,10 @@ import { GuestStatus, type Guest as BackendGuest } from './api/types';
 import * as guestsApi from './api/guests';
 import Header from './components/Header';
 import StatsCard from './components/StatsCard';
+import GuestTableSkeleton from './components/GuestTableSkeleton';
+import StatsCardSkeleton from './components/StatsCardSkeleton';
+import ErrorBoundary from './components/ErrorBoundary';
+import QueryErrorDisplay from './components/QueryErrorDisplay';
 import SearchBar from './components/SearchBar';
 import StatusFilter from './components/StatusFilter';
 import GuestTable from './components/GuestTable';
@@ -24,6 +28,7 @@ import {
   useBulkUpdateStatus,
   useBulkUpdatePastor,
   useBulkDelete,
+  useBackgroundStatsRefresh,
 } from './hooks';
 import { useUIStore } from './stores';
 
@@ -117,6 +122,12 @@ declare global {
  */
 function AppContent() {
   // ========================================
+  // Background Prefetching
+  // ========================================
+  // Prefetch stats every 2 minutes in background for fresh data
+  useBackgroundStatsRefresh();
+
+  // ========================================
   // UI State from Zustand Store
   // ========================================
   const {
@@ -144,8 +155,9 @@ function AppContent() {
   // ========================================
   const {
     data: guestsData,
-    isLoading: isLoadingGuests,
+    isPending: isPendingGuests,
     error: guestsError,
+    refetch: refetchGuests,
   } = useGuests({
     page: currentPage,
     limit: pageSize,
@@ -157,15 +169,16 @@ function AppContent() {
 
   const {
     data: stats,
-    isLoading: isLoadingStats,
+    isPending: isPendingStats,
     error: statsError,
+    refetch: refetchStats,
   } = useGuestStats();
 
   // Debug logging in development
   if (import.meta.env.DEV) {
     console.log('🔍 App State:', {
-      isLoadingGuests,
-      isLoadingStats,
+      isPendingGuests,
+      isPendingStats,
       guestsError,
       statsError,
       guestsDataLength: guestsData?.data?.length,
@@ -477,45 +490,6 @@ function AppContent() {
   };
 
   // ========================================
-  // Loading State
-  // ========================================
-  if (isLoadingGuests || isLoadingStats) {
-    return (
-      <div className='min-h-screen bg-slate-50 flex items-center justify-center'>
-        <div className='text-center'>
-          <div className='inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600'></div>
-          <p className='mt-4 text-slate-600'>Cargando invitados...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // ========================================
-  // Error State
-  // ========================================
-  if (guestsError || statsError) {
-    return (
-      <div className='min-h-screen bg-slate-50 flex items-center justify-center'>
-        <div className='text-center max-w-md p-8 bg-white rounded-lg shadow-lg'>
-          <div className='text-red-600 text-6xl mb-4'>⚠️</div>
-          <h2 className='text-2xl font-bold text-slate-800 mb-2'>
-            Error al cargar datos
-          </h2>
-          <p className='text-slate-600 mb-4'>
-            {guestsError?.message || statsError?.message || 'Error desconocido'}
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700'
-          >
-            Reintentar
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // ========================================
   // Render
   // ========================================
   return (
@@ -526,31 +500,47 @@ function AppContent() {
         {/* Stats Cards */}
         <div className='flex justify-center mb-8'>
           <section className='inline-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 max-w-max mx-auto'>
-            <StatsCard
-              title='Total Invitados'
-              value={stats?.total || 0}
-              colorClass='bg-blue-100 text-blue-600'
-            />
-            <StatsCard
-              title='Pastores'
-              value={stats?.pastors || 0}
-              colorClass='bg-purple-100 text-purple-600'
-            />
-            <StatsCard
-              title='Confirmados'
-              value={stats?.confirmed || 0}
-              colorClass='bg-green-100 text-green-600'
-            />
-            <StatsCard
-              title='Pendientes'
-              value={stats?.pending || 0}
-              colorClass='bg-yellow-100 text-yellow-600'
-            />
-            <StatsCard
-              title='Rechazados'
-              value={stats?.declined || 0}
-              colorClass='bg-red-100 text-red-600'
-            />
+            {isPendingStats || !stats ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <StatsCardSkeleton key={i} />
+              ))
+            ) : statsError ? (
+              <div className='col-span-full'>
+                <QueryErrorDisplay
+                  error={statsError}
+                  onRetry={refetchStats}
+                  title='No se pudieron cargar las estadísticas'
+                />
+              </div>
+            ) : (
+              <>
+                <StatsCard
+                  title='Total Invitados'
+                  value={stats.total || 0}
+                  colorClass='bg-blue-100 text-blue-600'
+                />
+                <StatsCard
+                  title='Pastores'
+                  value={stats.pastors || 0}
+                  colorClass='bg-purple-100 text-purple-600'
+                />
+                <StatsCard
+                  title='Confirmados'
+                  value={stats.confirmed || 0}
+                  colorClass='bg-green-100 text-green-600'
+                />
+                <StatsCard
+                  title='Pendientes'
+                  value={stats.pending || 0}
+                  colorClass='bg-yellow-100 text-yellow-600'
+                />
+                <StatsCard
+                  title='Rechazados'
+                  value={stats.declined || 0}
+                  colorClass='bg-red-100 text-red-600'
+                />
+              </>
+            )}
           </section>
         </div>
 
@@ -602,32 +592,42 @@ function AppContent() {
             <StatusFilter />
           </div>
 
-          {/* Guest Table */}
-          <GuestTable
-            guests={guests}
-            onSort={handleSort}
-            sortConfig={{
-              key: sortBy,
-              direction: sortOrder === 'asc' ? 'ascending' : 'descending',
-            }}
-            onUpdateStatus={handleUpdateGuestStatus}
-            onTogglePastorStatus={handleTogglePastorStatus}
-            onSelectGuest={handleSelectGuest}
-            selectedGuests={selectedGuestIds}
-            onSelectAll={handleSelectAll}
-            isAllSelected={isAllSelected}
-            onDeleteGuest={handleDeleteGuest}
-            onEditGuest={handleEditGuest}
-          />
+          {/* Guest Table or Skeleton */}
+          {isPendingGuests || !guestsData ? (
+            <GuestTableSkeleton />
+          ) : (
+            <GuestTable
+              guests={guests}
+              onSort={handleSort}
+              sortConfig={{
+                key: sortBy,
+                direction: sortOrder === 'asc' ? 'ascending' : 'descending',
+              }}
+              onUpdateStatus={handleUpdateGuestStatus}
+              onTogglePastorStatus={handleTogglePastorStatus}
+              onSelectGuest={handleSelectGuest}
+              selectedGuests={selectedGuestIds}
+              onSelectAll={handleSelectAll}
+              isAllSelected={isAllSelected}
+              onDeleteGuest={handleDeleteGuest}
+              onEditGuest={handleEditGuest}
+            />
+          )}
 
           {/* Pagination */}
-          {totalPages > 0 && (
+          {!isPendingGuests && totalPages > 0 && (
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
               totalItems={guestsData?.meta.total || 0}
               itemsPerPage={pageSize}
+              filters={{
+                search: searchQuery,
+                status: statusFilter === 'ALL' ? undefined : statusFilter,
+                sortBy,
+                sortOrder,
+              }}
             />
           )}
         </div>
@@ -642,13 +642,15 @@ function AppContent() {
 }
 
 /**
- * App Component with QueryClientProvider wrapper
+ * App Component with QueryClientProvider and ErrorBoundary wrapper
  */
 const App: React.FC = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppContent />
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AppContent />
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 };
 
