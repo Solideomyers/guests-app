@@ -12,3 +12,4 @@ export {
 } from './useBulkOperations';
 export { usePrefetchGuests } from './usePrefetchGuests';
 export { useBackgroundStatsRefresh } from './useBackgroundStatsRefresh';
+export { useKeyboardShortcut } from './useKeyboardShortcut';

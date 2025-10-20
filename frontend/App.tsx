@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { Toaster } from 'sonner';
 import { queryClient } from './lib/query-client';
+import { localStoragePersister } from './lib/query-persister';
 import { AttendanceStatus, Guest as FrontendGuest } from './types';
 import { GuestStatus, type Guest as BackendGuest } from './api/types';
 import * as guestsApi from './api/guests';
@@ -20,6 +22,12 @@ import ExportButtons from './components/ExportButtons';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import BulkActionsToolbar from './components/BulkActionsToolbar';
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
   useGuests,
   useGuestStats,
   useCreateGuest,
@@ -29,6 +37,7 @@ import {
   useBulkUpdatePastor,
   useBulkDelete,
   useBackgroundStatsRefresh,
+  useKeyboardShortcut,
 } from './hooks';
 import { useUIStore } from './stores';
 
@@ -142,13 +151,30 @@ function AppContent() {
     clearSelection,
     openAddModal,
     closeAddModal,
+    isAddModalOpen,
     editingGuestId,
     openEditModal,
     closeEditModal,
+    isEditModalOpen,
     sortBy,
     sortOrder,
     setSorting,
   } = useUIStore();
+
+  // ========================================
+  // Keyboard Shortcuts (UX Principle #11)
+  // ========================================
+  // Ctrl+N or Cmd+N: Open add guest modal
+  useKeyboardShortcut('n', openAddModal, { ctrl: true });
+
+  // Escape: Close modals or clear selection
+  useKeyboardShortcut('Escape', () => {
+    if (isAddModalOpen || isEditModalOpen) {
+      isAddModalOpen ? closeAddModal() : closeEditModal();
+    } else if (selectedGuestIds.size > 0) {
+      clearSelection();
+    }
+  });
 
   // ========================================
   // Data Fetching with TanStack Query
@@ -517,27 +543,27 @@ function AppContent() {
                 <StatsCard
                   title='Total Invitados'
                   value={stats.total || 0}
-                  colorClass='bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                  colorClass='bg-primary/10 text-primary'
                 />
                 <StatsCard
                   title='Pastores'
                   value={stats.pastors || 0}
-                  colorClass='bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400'
+                  colorClass='bg-secondary/10 text-secondary'
                 />
                 <StatsCard
                   title='Confirmados'
                   value={stats.confirmed || 0}
-                  colorClass='bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                  colorClass='bg-chart-1/10 text-chart-1'
                 />
                 <StatsCard
                   title='Pendientes'
                   value={stats.pending || 0}
-                  colorClass='bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400'
+                  colorClass='bg-chart-2/10 text-chart-2'
                 />
                 <StatsCard
                   title='Rechazados'
                   value={stats.declined || 0}
-                  colorClass='bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
+                  colorClass='bg-destructive/10 text-destructive'
                 />
               </>
             )}
@@ -564,26 +590,40 @@ function AppContent() {
                     onExportCSV={handleExportCSV}
                     onExportPDF={handleExportPDF}
                   />
-                  <button
-                    onClick={openAddModal}
-                    className='flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors shadow-sm'
-                  >
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      strokeWidth={1.5}
-                      stroke='currentColor'
-                      className='w-5 h-5'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        d='M12 4.5v15m7.5-7.5h-15'
-                      />
-                    </svg>
-                    <span>Añadir Invitado</span>
-                  </button>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          onClick={openAddModal}
+                          className='flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors shadow-sm'
+                        >
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                            strokeWidth={1.5}
+                            stroke='currentColor'
+                            className='w-5 h-5'
+                          >
+                            <path
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                              d='M12 4.5v15m7.5-7.5h-15'
+                            />
+                          </svg>
+                          <span>Añadir Invitado</span>
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className='flex items-center gap-2'>
+                          Crear nuevo invitado
+                          <kbd className='px-2 py-1 text-xs font-semibold text-muted-foreground bg-muted border border-border rounded'>
+                            Ctrl+N
+                          </kbd>
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </div>
             )}
@@ -644,8 +684,18 @@ function AppContent() {
 
 /**
  * App Component with QueryClientProvider and ErrorBoundary wrapper
+ * Initializes cache persistence on mount
  */
 const App: React.FC = () => {
+  // Initialize cache persistence
+  useEffect(() => {
+    persistQueryClient({
+      queryClient,
+      persister: localStoragePersister,
+      maxAge: 1000 * 60 * 60 * 24, // 24 hours
+    });
+  }, []);
+
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>

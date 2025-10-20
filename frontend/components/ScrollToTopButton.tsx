@@ -33,7 +33,7 @@ const ScrollToTopButton: React.FC = () => {
     <Button
       onClick={scrollToTop}
       size='icon'
-      className={`fixed bottom-8 right-8 z-50 shadow-lg transition-opacity duration-300 bg-blue-600 hover:bg-blue-700 text-white ${
+      className={`fixed bottom-8 right-8 z-50 shadow-lg transition-opacity duration-300 bg-primary hover:bg-primary/90 text-primary-foreground ${
         isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
       aria-label='Go to top'

@@ -77,7 +77,11 @@ const GuestRow: React.FC<GuestRowProps> = ({
         onConfirm={handleConfirmDelete}
       />
       <tr
-        className={isSelected ? 'bg-blue-50' : 'hover:bg-muted/50'}
+        className={
+          isSelected
+            ? 'bg-primary/5 border-l-4 border-l-primary'
+            : 'hover:bg-muted/50'
+        }
         onMouseEnter={handleMouseEnter}
       >
         <td className='p-4'>
@@ -85,6 +89,7 @@ const GuestRow: React.FC<GuestRowProps> = ({
             checked={isSelected}
             onCheckedChange={onSelect}
             aria-label={`Select guest ${guest.firstName}`}
+            className='h-5 w-5 border-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary'
           />
         </td>
         <td className='px-2 sm:px-6 py-4 whitespace-nowrap'>
@@ -110,6 +115,7 @@ const GuestRow: React.FC<GuestRowProps> = ({
             }
             onClick={(e) => e.stopPropagation()}
             aria-label={`Mark ${guest.firstName} as pastor`}
+            className='h-5 w-5 border-2 data-[state=checked]:bg-secondary data-[state=checked]:border-secondary'
           />
         </td>
         <td className='px-2 sm:px-6 py-4 whitespace-nowrap'>
@@ -123,21 +129,8 @@ const GuestRow: React.FC<GuestRowProps> = ({
                 onUpdateStatus(guest.id, value as AttendanceStatus)
               }
             >
-              <SelectTrigger className='w-8 h-8 p-0 border-none'>
+              <SelectTrigger className='w-auto h-8 px-2 border-border bg-background hover:bg-accent'>
                 <span className='sr-only'>Cambiar estado</span>
-                <svg
-                  className='w-4 h-4'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M19 9l-7 7-7-7'
-                  />
-                </svg>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={AttendanceStatus.PENDING}>

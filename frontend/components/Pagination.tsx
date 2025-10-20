@@ -63,28 +63,30 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <nav
-      className='flex items-center justify-between border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3 sm:px-6 transition-colors'
+      className='flex items-center justify-between border-t border-border bg-card px-4 py-3 sm:px-6 transition-colors'
       aria-label='Pagination'
     >
       <div className='hidden sm:block'>
-        <p className='text-sm text-slate-700 dark:text-slate-300'>
-          Mostrando <span className='font-medium'>{startItem}</span> a{' '}
-          <span className='font-medium'>{endItem}</span> de{' '}
-          <span className='font-medium'>{totalItems}</span> resultados
+        <p className='text-sm text-muted-foreground'>
+          Mostrando{' '}
+          <span className='font-bold text-foreground'>{startItem}</span> a{' '}
+          <span className='font-bold text-foreground'>{endItem}</span> de{' '}
+          <span className='font-bold text-foreground'>{totalItems}</span>{' '}
+          resultados
         </p>
       </div>
       <div className='flex flex-1 justify-between sm:justify-end gap-3'>
         <button
           onClick={handlePrev}
           disabled={currentPage === 1}
-          className='relative inline-flex items-center rounded-md bg-white dark:bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-900 dark:text-slate-100 ring-1 ring-inset ring-slate-300 dark:ring-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 focus-visible:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition-all'
+          className='relative inline-flex items-center rounded-md bg-card px-3 py-2 text-sm font-semibold text-foreground ring-1 ring-inset ring-border hover:bg-accent focus-visible:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition-all'
         >
           Anterior
         </button>
         <button
           onClick={handleNext}
           disabled={currentPage >= totalPages}
-          className='relative inline-flex items-center rounded-md bg-white dark:bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-900 dark:text-slate-100 ring-1 ring-inset ring-slate-300 dark:ring-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 focus-visible:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition-all'
+          className='relative inline-flex items-center rounded-md bg-card px-3 py-2 text-sm font-semibold text-foreground ring-1 ring-inset ring-border hover:bg-accent focus-visible:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition-all'
         >
           Siguiente
         </button>

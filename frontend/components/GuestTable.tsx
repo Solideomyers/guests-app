@@ -47,10 +47,11 @@ const SortableTableHead: React.FC<{
 
   return (
     <TableHead
-      className='cursor-pointer select-none'
+      className='cursor-pointer select-none font-semibold'
       onClick={() => onSort(columnKey)}
     >
-      {title} <span className='text-muted-foreground ml-1'>{sortIcon}</span>
+      {title}{' '}
+      <span className='text-muted-foreground/60 ml-1 text-xs'>{sortIcon}</span>
     </TableHead>
   );
 };
@@ -88,6 +89,7 @@ const GuestTable: React.FC<GuestTableProps> = ({
                 checked={isAllSelected}
                 onCheckedChange={onSelectAll}
                 aria-label='Select all guests on this page'
+                className='h-5 w-5 border-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary'
               />
             </TableHead>
             <SortableTableHead

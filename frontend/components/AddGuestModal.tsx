@@ -96,15 +96,15 @@ const AddGuestModal: React.FC<AddGuestModalProps> = ({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-hidden'>
         <DialogHeader>
-          <DialogTitle className='flex items-center gap-3 text-gray-900'>
-            <div className='bg-blue-100 p-2 rounded-full'>
+          <DialogTitle className='flex items-center gap-3 text-foreground text-xl font-bold'>
+            <div className='bg-primary/10 p-2 rounded-full'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
                 viewBox='0 0 24 24'
                 strokeWidth={1.5}
                 stroke='currentColor'
-                className='w-6 h-6 text-blue-600'
+                className='w-6 h-6 text-primary'
               >
                 <path
                   strokeLinecap='round'
@@ -115,16 +115,21 @@ const AddGuestModal: React.FC<AddGuestModalProps> = ({
             </div>
             {guestToEdit ? 'Editar Invitado' : 'Añadir Nuevo Invitado'}
           </DialogTitle>
-          <DialogDescription>
-            Completa los detalles del invitado a continuación.
+          <DialogDescription className='text-muted-foreground'>
+            Completa los detalles del invitado a continuación. Los campos
+            marcados con * son obligatorios.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5 mt-2 max-h-[50vh] overflow-y-auto px-1'>
+            {/* Grupo: Información Personal (requerida) */}
             <div className='space-y-2'>
-              <Label htmlFor='firstName' className='text-gray-700 font-medium'>
-                Nombre *
+              <Label
+                htmlFor='firstName'
+                className='text-foreground font-semibold'
+              >
+                Nombre <span className='text-destructive'>*</span>
               </Label>
               <Input
                 id='firstName'
@@ -133,10 +138,11 @@ const AddGuestModal: React.FC<AddGuestModalProps> = ({
                 onChange={handleChange}
                 placeholder='Ej: Juan'
                 required
+                className='border-input'
               />
             </div>
             <div className='space-y-2'>
-              <Label htmlFor='lastName' className='text-gray-700 font-medium'>
+              <Label htmlFor='lastName' className='text-foreground/80'>
                 Apellido
               </Label>
               <Input
@@ -147,8 +153,9 @@ const AddGuestModal: React.FC<AddGuestModalProps> = ({
                 placeholder='Ej: Pérez'
               />
             </div>
-            <div className='md:col-span-2 space-y-2'>
-              <Label htmlFor='church' className='text-gray-700 font-medium'>
+            {/* Grupo: Información de Iglesia */}
+            <div className='md:col-span-2 space-y-2 mt-2'>
+              <Label htmlFor='church' className='text-foreground/80'>
                 Iglesia
               </Label>
               <Input
@@ -159,8 +166,34 @@ const AddGuestModal: React.FC<AddGuestModalProps> = ({
                 placeholder='Nombre de la iglesia'
               />
             </div>
+            {/* Grupo: Ubicación */}
+            <div className='md:col-span-2 space-y-2'>
+              <Label htmlFor='address' className='text-foreground/80'>
+                Dirección
+              </Label>
+              <Input
+                id='address'
+                name='address'
+                value={formData.address}
+                onChange={handleChange}
+                placeholder='Ej: Calle Principal #123'
+              />
+            </div>
+            {/* Grupo: Información de Contacto */}
             <div className='space-y-2'>
-              <Label htmlFor='city' className='text-gray-700 font-medium'>
+              <Label htmlFor='state' className='text-foreground/80'>
+                Estado / Provincia
+              </Label>
+              <Input
+                id='state'
+                name='state'
+                value={formData.state}
+                onChange={handleChange}
+                placeholder='Ej: Maracay'
+              />
+            </div>
+            <div className='space-y-2'>
+              <Label htmlFor='city' className='text-foreground/80'>
                 Ciudad
               </Label>
               <Input
@@ -172,7 +205,7 @@ const AddGuestModal: React.FC<AddGuestModalProps> = ({
               />
             </div>
             <div className='space-y-2'>
-              <Label htmlFor='phone' className='text-gray-700 font-medium'>
+              <Label htmlFor='phone' className='text-foreground/80'>
                 Teléfono
               </Label>
               <Input
@@ -181,10 +214,24 @@ const AddGuestModal: React.FC<AddGuestModalProps> = ({
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder='Ej: +1 809-123-4567'
+                type='tel'
               />
             </div>
-            <div className='md:col-span-2'>
-              <div className='flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-lg p-3 mt-2'>
+            <div className='md:col-span-2 space-y-2'>
+              <Label htmlFor='notes' className='text-foreground/80'>
+                Notas (opcional)
+              </Label>
+              <Input
+                id='notes'
+                name='notes'
+                value={formData.notes}
+                onChange={handleChange}
+                placeholder='Información adicional'
+              />
+            </div>{' '}
+            {/* Grupo: Estado de Pastor */}
+            <div className='md:col-span-2 mt-2'>
+              <div className='flex items-start gap-4 bg-primary/5 border-2 border-primary/20 rounded-lg p-4 hover:border-primary/40 transition-colors'>
                 <Checkbox
                   id='isPastor'
                   checked={formData.isPastor}
@@ -194,16 +241,32 @@ const AddGuestModal: React.FC<AddGuestModalProps> = ({
                       isPastor: checked === true,
                     }))
                   }
+                  className='mt-1 h-5 w-5'
                 />
                 <div className='flex-1'>
                   <Label
                     htmlFor='isPastor'
-                    className='text-sm font-semibold cursor-pointer text-gray-900'
+                    className='text-base font-bold cursor-pointer text-foreground flex items-center gap-2'
                   >
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      strokeWidth={2}
+                      stroke='currentColor'
+                      className='w-5 h-5 text-primary'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        d='M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z'
+                      />
+                    </svg>
                     Es Pastor
                   </Label>
-                  <p className='text-xs text-gray-600'>
-                    Marque esta casilla si el invitado es un pastor.
+                  <p className='text-sm text-muted-foreground mt-1'>
+                    Marque esta casilla si el invitado tiene el rol de pastor en
+                    su iglesia.
                   </p>
                 </div>
               </div>
@@ -212,14 +275,14 @@ const AddGuestModal: React.FC<AddGuestModalProps> = ({
 
           {error && (
             <div className='mt-4'>
-              <div className='bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-3'>
+              <div className='bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-lg flex items-center gap-3 animate-fade-in'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
                   viewBox='0 0 24 24'
                   strokeWidth={1.5}
                   stroke='currentColor'
-                  className='w-5 h-5'
+                  className='w-5 h-5 flex-shrink-0'
                 >
                   <path
                     strokeLinecap='round'
@@ -227,23 +290,23 @@ const AddGuestModal: React.FC<AddGuestModalProps> = ({
                     d='M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z'
                   />
                 </svg>
-                <span className='text-sm'>{error}</span>
+                <span className='text-sm font-medium'>{error}</span>
               </div>
             </div>
           )}
 
-          <DialogFooter className='mt-6'>
+          <DialogFooter className='mt-6 gap-2'>
             <Button
               type='button'
               onClick={onClose}
               variant='outline'
-              className='bg-white hover:bg-gray-50'
+              className='font-medium'
             >
               Cancelar
             </Button>
             <Button
               type='submit'
-              className='flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white'
+              className='flex items-center gap-1.5 font-semibold bg-primary text-primary-foreground hover:bg-primary/90'
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'

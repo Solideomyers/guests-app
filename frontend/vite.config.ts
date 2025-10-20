@@ -20,5 +20,35 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, '.'),
       },
     },
+    build: {
+      // Code splitting para mejor rendimiento
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            // React y React-DOM en un chunk separado
+            if (
+              id.includes('node_modules/react') ||
+              id.includes('node_modules/react-dom')
+            ) {
+              return 'react-vendor';
+            }
+            // TanStack Query en su propio chunk
+            if (id.includes('@tanstack/react-query')) {
+              return 'query-vendor';
+            }
+            // Radix UI components en un chunk
+            if (id.includes('@radix-ui')) {
+              return 'ui-vendor';
+            }
+            // Lucide icons separado
+            if (id.includes('lucide-react')) {
+              return 'icons-vendor';
+            }
+          },
+        },
+      },
+      // Aumentar límite de advertencia (los chunks ahora serán más pequeños)
+      chunkSizeWarningLimit: 600,
+    },
   };
 });
