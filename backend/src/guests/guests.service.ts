@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CacheService } from '../cache/cache.service';
@@ -26,24 +27,38 @@ export class GuestsService {
    * Create a new guest
    */
   async create(createGuestDto: CreateGuestDto) {
+    // Normalize whitespace
+    const normalizedData = {
+      ...createGuestDto,
+      firstName: createGuestDto.firstName?.trim(),
+      lastName: createGuestDto.lastName?.trim(),
+      address: createGuestDto.address?.trim(),
+      city: createGuestDto.city?.trim(),
+      state: createGuestDto.state?.trim(),
+      church: createGuestDto.church?.trim(),
+      phone: createGuestDto.phone?.trim(),
+    };
+
     // Check for duplicates
     const existing = await this.prisma.guest.findFirst({
       where: {
-        firstName: createGuestDto.firstName,
-        lastName: createGuestDto.lastName || '',
+        firstName: normalizedData.firstName,
+        phone: normalizedData.phone,
         deletedAt: null,
       },
     });
 
     if (existing) {
-      throw new BadRequestException('A guest with this name already exists');
+      throw new ConflictException(
+        'A guest with this name and phone already exists',
+      );
     }
 
     const guest = await this.prisma.guest.create({
       data: {
-        ...createGuestDto,
-        status: createGuestDto.status || GuestStatus.PENDING,
-        isPastor: createGuestDto.isPastor || false,
+        ...normalizedData,
+        status: normalizedData.status || GuestStatus.PENDING,
+        isPastor: normalizedData.isPastor || false,
       },
     });
 
@@ -180,6 +195,18 @@ export class GuestsService {
   async update(id: number, updateGuestDto: UpdateGuestDto) {
     const guest = await this.findOne(id);
 
+    // Normalize whitespace
+    const normalizedData = {
+      ...updateGuestDto,
+      firstName: updateGuestDto.firstName?.trim(),
+      lastName: updateGuestDto.lastName?.trim(),
+      address: updateGuestDto.address?.trim(),
+      city: updateGuestDto.city?.trim(),
+      state: updateGuestDto.state?.trim(),
+      church: updateGuestDto.church?.trim(),
+      phone: updateGuestDto.phone?.trim(),
+    };
+
     // Track changes for history
     const changes: Array<{
       field: string;
@@ -187,10 +214,10 @@ export class GuestsService {
       newValue: string;
     }> = [];
 
-    Object.keys(updateGuestDto).forEach((key) => {
+    Object.keys(normalizedData).forEach((key) => {
       const oldValue = guest[key];
-      const newValue = updateGuestDto[key];
-      if (oldValue !== newValue) {
+      const newValue = normalizedData[key];
+      if (oldValue !== newValue && newValue !== undefined) {
         changes.push({
           field: key,
           oldValue: String(oldValue),
@@ -201,7 +228,7 @@ export class GuestsService {
 
     const updated = await this.prisma.guest.update({
       where: { id },
-      data: updateGuestDto,
+      data: normalizedData,
     });
 
     // Create history entries for each change

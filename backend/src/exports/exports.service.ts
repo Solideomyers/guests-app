@@ -120,7 +120,7 @@ export class ExportsService {
 
       // Footer
       const pages = doc.bufferedPageRange();
-      for (let i = 0; i < pages.count; i++) {
+      for (let i = pages.start; i < pages.start + pages.count; i++) {
         doc.switchToPage(i);
         doc
           .fontSize(8)

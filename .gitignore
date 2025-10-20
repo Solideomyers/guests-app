@@ -17,7 +17,16 @@ dist
 dist-ssr
 frontend/dist
 backend/dist
+build
 *.local
+
+# Test coverage
+coverage
+frontend/coverage
+backend/coverage
+backend/coverage-e2e
+*.lcov
+.nyc_output
 
 # Environment files
 .env
@@ -27,6 +36,7 @@ frontend/.env
 frontend/.env.local
 backend/.env
 backend/.env.local
+backend/.env.test
 
 # Editor directories and files
 .vscode/*
@@ -46,9 +56,52 @@ Thumbs.db
 # Database
 backend/prisma/*.db
 backend/prisma/*.db-journal
+*.sqlite
+*.sqlite-journal
+
+# Test databases
+backend/test.db
+backend/test.db-journal
 
 # Images
 *.png
 *.jpg
 *.jpeg
 *.gif
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Cache
+.cache
+.parcel-cache
+.eslintcache
+.next
+.nuxt
+
+# TypeScript
+*.tsbuildinfo
+
+# IDE
+*.code-workspace
+
+# OS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+Desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+
+# Generated files
+backend/src/**/*.js
+backend/src/**/*.js.map
+backend/test/**/*.js
+backend/test/**/*.js.map
