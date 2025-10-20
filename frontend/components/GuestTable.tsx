@@ -80,11 +80,11 @@ const GuestTable: React.FC<GuestTableProps> = ({
   }
 
   return (
-    <div className='rounded-md border border-border'>
-      <Table>
+    <div className='rounded-md border border-border overflow-x-auto'>
+      <Table className='min-w-[800px]'>
         <TableHeader>
           <TableRow>
-            <TableHead className='w-12'>
+            <TableHead className='w-12 sticky left-0 z-10 bg-muted'>
               <Checkbox
                 checked={isAllSelected}
                 onCheckedChange={onSelectAll}
@@ -118,7 +118,7 @@ const GuestTable: React.FC<GuestTableProps> = ({
             />
             <TableHead>Pastor</TableHead>
             <TableHead>Estado</TableHead>
-            <TableHead className='w-24'>
+            <TableHead className='w-24 sticky right-0 z-10 bg-muted'>
               <span className='sr-only'>Acciones</span>
             </TableHead>
           </TableRow>

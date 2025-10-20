@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useUIStore } from '../stores';
-import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
 import {
   Tooltip,
   TooltipContent,
@@ -11,7 +11,8 @@ import { Moon, Sun } from 'lucide-react';
 
 /**
  * DarkModeToggle Component
- * Switches between light and dark mode with smooth transition using shadcn Switch
+ * Elegant toggle between light and dark mode with smooth animations
+ * Features: Rotating icon transition, themed colors, accessible tooltip
  */
 const DarkModeToggle: React.FC = () => {
   const darkMode = useUIStore((state) => state.darkMode);
@@ -31,24 +32,41 @@ const DarkModeToggle: React.FC = () => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className='flex items-center gap-2'>
+          <Button
+            variant='ghost'
+            size='icon'
+            onClick={toggleDarkMode}
+            className='relative h-10 w-10 rounded-lg hover:bg-accent transition-all duration-300'
+            aria-label={darkMode ? 'Activar modo claro' : 'Activar modo oscuro'}
+          >
+            {/* Sun Icon - visible in dark mode */}
             <Sun
-              className={`h-4 w-4 transition-colors ${!darkMode ? 'text-yellow-500' : 'text-gray-400'}`}
+              className={`absolute h-5 w-5 transition-all duration-500 ${
+                darkMode
+                  ? 'rotate-0 scale-100 text-primary'
+                  : 'rotate-90 scale-0 text-muted-foreground'
+              }`}
             />
-            <Switch
-              checked={darkMode}
-              onCheckedChange={toggleDarkMode}
-              aria-label={
-                darkMode ? 'Activar modo claro' : 'Activar modo oscuro'
-              }
-            />
+            {/* Moon Icon - visible in light mode */}
             <Moon
-              className={`h-4 w-4 transition-colors ${darkMode ? 'text-blue-400' : 'text-gray-400'}`}
+              className={`absolute h-5 w-5 transition-all duration-500 ${
+                darkMode
+                  ? 'rotate-90 scale-0 text-muted-foreground'
+                  : 'rotate-0 scale-100 text-primary'
+              }`}
             />
-          </div>
+            <span className='sr-only'>
+              {darkMode ? 'Modo claro' : 'Modo oscuro'}
+            </span>
+          </Button>
         </TooltipTrigger>
-        <TooltipContent>
-          <p>{darkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}</p>
+        <TooltipContent side='bottom'>
+          <p className='flex items-center gap-2'>
+            {darkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+            <kbd className='px-2 py-1 text-xs font-semibold text-muted-foreground bg-muted border border-border rounded'>
+              {darkMode ? '☀️' : '🌙'}
+            </kbd>
+          </p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

@@ -21,6 +21,7 @@ import AddGuestModal from './components/AddGuestModal';
 import ExportButtons from './components/ExportButtons';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import BulkActionsToolbar from './components/BulkActionsToolbar';
+import CTABanner from './components/CTABanner';
 import {
   Tooltip,
   TooltipContent,
@@ -522,10 +523,10 @@ function AppContent() {
     <div className='min-h-screen bg-background text-foreground font-sans transition-colors'>
       <Toaster position='top-right' richColors />
       <Header />
-      <main className='container mx-auto p-4 sm:p-6 lg:p-8'>
+      <main className='container mx-auto px-3 py-4 sm:p-6 lg:p-8'>
         {/* Stats Cards */}
-        <div className='flex justify-center mb-8'>
-          <section className='inline-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 max-w-max mx-auto'>
+        <div className='flex justify-center mb-6 sm:mb-8'>
+          <section className='w-full grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-6 max-w-7xl'>
             {isPendingStats || !stats ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <StatsCardSkeleton key={i} />
@@ -570,6 +571,35 @@ function AppContent() {
           </section>
         </div>
 
+        {/* CTA Banner - Dynamic based on statistics */}
+        {stats && (
+          <>
+            {stats.total === 0 && (
+              <CTABanner type='empty' onAction={openAddModal} />
+            )}
+            {stats.total > 0 &&
+              stats.confirmed / stats.total < 0.5 &&
+              stats.total > 5 && (
+                <CTABanner
+                  type='low-confirmation'
+                  onAction={() => {
+                    // Scroll to filters to encourage user to review pending guests
+                    window.scrollTo({ top: 400, behavior: 'smooth' });
+                  }}
+                />
+              )}
+            {stats.total > 10 && stats.confirmed / stats.total >= 0.7 && (
+              <CTABanner
+                type='success'
+                onAction={() => {
+                  // Scroll to top to see stats
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              />
+            )}
+          </>
+        )}
+
         {/* Main Content */}
         <div className='bg-card text-card-foreground rounded-lg shadow-md overflow-hidden border border-border transition-colors'>
           <div className='p-4 md:p-6 space-y-4'>
@@ -583,9 +613,9 @@ function AppContent() {
                 onSetPastorStatus={handleBulkPastorUpdate}
               />
             ) : (
-              <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
+              <div className='flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4'>
                 <SearchBar />
-                <div className='flex flex-col sm:flex-row items-center gap-2'>
+                <div className='flex flex-row items-center gap-2 justify-end'>
                   <ExportButtons
                     onExportCSV={handleExportCSV}
                     onExportPDF={handleExportPDF}
@@ -595,7 +625,7 @@ function AppContent() {
                       <TooltipTrigger asChild>
                         <button
                           onClick={openAddModal}
-                          className='flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors shadow-sm'
+                          className='flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors shadow-sm touch-manipulation'
                         >
                           <svg
                             xmlns='http://www.w3.org/2000/svg'

@@ -29,20 +29,26 @@ guests-app/
 
 ### Frontend
 - **React 19** - UI library
-- **TypeScript** - Type safety
-- **Vite** - Build tool
-- **TailwindCSS** - Styling
-- **TanStack Query** - Data fetching & caching
-- **Zustand** - State management
+- **TypeScript 5.8** - Type safety
+- **Vite 6** - Build tool & dev server
+- **TailwindCSS 4** - Utility-first CSS (OKLCH color space)
+- **shadcn/ui** - Accessible component library (13 components)
+- **TanStack Query v5** - Data fetching, caching & synchronization
+- **Zustand 5** - Lightweight state management
+- **react-hook-form** - Form validation & management
+- **Zod** - TypeScript-first schema validation
 - **Axios** - HTTP client
 - **Sonner** - Toast notifications
+- **Lucide React** - Icon library
 
 ### Backend
-- **NestJS 11** - Framework
-- **Prisma 6** - ORM
-- **Neon PostgreSQL** - Database (serverless)
-- **Redis 7** - Cache layer
+- **NestJS 11** - Progressive Node.js framework
+- **Prisma 6** - Next-generation ORM
+- **Neon PostgreSQL** - Serverless database
+- **Redis 7** - In-memory cache layer
 - **TypeScript** - Type safety
+- **class-validator** - DTO validation
+- **class-transformer** - Object transformation
 
 ## 📋 Prerequisites
 
@@ -140,32 +146,89 @@ npm run build:backend
 
 ## 🎯 Features
 
-### ✅ Implemented
+### ✅ Implemented (Production Ready)
+
+#### Data Management
 - ✅ Complete CRUD for guests
 - ✅ Advanced filtering & search
 - ✅ Pagination & sorting
 - ✅ Bulk operations (status update, delete)
+- ✅ Soft delete with audit trail
 - ✅ Guest statistics dashboard
 - ✅ Audit history tracking
 - ✅ Export to CSV/PDF
+
+#### Performance & Caching
 - ✅ Redis caching for performance
-- ✅ Real-time updates
-- ✅ Responsive design
+- ✅ TanStack Query client-side caching
+- ✅ Optimistic updates
+- ✅ Cache invalidation strategies
+- ✅ Bundle optimization (6 chunks, ~206KB largest)
 
-### 🚧 In Progress
-- 🔄 Custom hooks with TanStack Query
-- 🔄 Zustand state management
-- 🔄 Component refactoring
-- 🔄 Optimistic updates
+#### User Experience
+- ✅ **Dark Matter OKLCH Theme** - Modern, vibrant color palette
+- ✅ **Dark/Light Mode** - Smooth toggle with animations
+- ✅ **Form Validations** - Real-time with react-hook-form + Zod
+- ✅ **Preview Confirmation** - 2-step process before saving
+- ✅ **Avatar System** - Initials-based with 12 themed colors
+- ✅ **Mobile Responsive** - Full responsive with touch optimization
+- ✅ **Keyboard Shortcuts** - Ctrl+N (add), Escape (close)
+- ✅ **Custom Scrollbar** - Themed for consistency
+- ✅ **CTA Banner** - Conditional smart prompts
+- ✅ **Toast Notifications** - User feedback with Sonner
+- ✅ **Empty States** - Helpful prompts when no data
+- ✅ **Loading Skeletons** - Smooth loading experience
+- ✅ **Error Boundaries** - Graceful error handling
 
-### 📋 Planned
-- Performance optimizations
-- Testing (unit + e2e)
-- Documentation
-- Deployment (Vercel + Railway)
+#### Design System
+- ✅ **shadcn/ui Components** - 13 accessible components
+- ✅ **Visual Hierarchy** - Opacity, bold, scale, grouping
+- ✅ **Confirmation Dialogs** - Safe destructive actions
+- ✅ **WCAG AA Compliance** - Accessible to all users
+- ✅ **Touch-Friendly** - Minimum 44px touch targets
 
-## 📚 API Documentation
+### 📋 Roadmap
 
+#### Testing (High Priority)
+- [ ] Backend unit tests (Jest)
+- [ ] Backend E2E tests (Supertest)
+- [ ] Frontend component tests (Vitest)
+- [ ] Coverage > 70%
+
+#### Security (Critical for Production)
+- [ ] HTTPS configuration (see HTTPS_SECURITY.md)
+- [ ] Security headers
+- [ ] Environment variables audit
+- [ ] Penetration testing
+
+#### Deployment
+## 📖 Documentation
+
+### Comprehensive Guides
+- [Frontend README](frontend/README.md) - Frontend architecture & components
+- [Backend Cache](backend/src/cache/README.md) - Redis caching strategies
+- [Backend Exports](backend/src/exports/README.md) - Export module (CSV/PDF)
+- [Backend Guests](backend/src/guests/README.md) - Guests API documentation
+
+### Implementation Summaries
+- [Plan de Mejoras](PLAN_IMPROVE.md) - Complete implementation roadmap
+- [Phase 2.5 Summary](PHASE_2.5_SUMMARY.md) - shadcn/ui migration
+- [Phase 2.6 Summary](PHASE_2.6_SUMMARY.md) - UX improvements & validations
+- [TypeScript Fixes](TYPESCRIPT_FIXES.md) - TS migration details
+- [Best Practices](BEST_PRACTICES.md) - Code standards
+
+### Configuration & Security
+- [HTTPS Security](HTTPS_SECURITY.md) - Production HTTPS setup (REQUIRED)
+- [Dashboard Design System](frontend/dashboard_design_system.md) - Design tokens
+- [Forms UI Guide](frontend/forms_ui_guide.md) - Form patterns
+
+### UX Principles Implemented
+Based on uidesign.tips methodology:
+- **#1-2:** Confirmation before destructive actions
+- **#3:** Empty states with clear CTAs
+- **#4:** Specific button labels
+- **#11:** Keyboard shortcuts
+- **#12:** Visual hierarchy (opacity, bold, scale)
 Backend exposes a REST API at `/api/v1`:
 
 ### Guests Endpoints

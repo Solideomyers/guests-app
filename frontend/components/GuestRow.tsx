@@ -12,6 +12,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { DeleteConfirmDialog } from './DeleteConfirmDialog';
+import GuestAvatar from './GuestAvatar';
 
 interface GuestRowProps {
   guest: Guest;
@@ -84,7 +85,7 @@ const GuestRow: React.FC<GuestRowProps> = ({
         }
         onMouseEnter={handleMouseEnter}
       >
-        <td className='p-4'>
+        <td className='p-4 sticky left-0 z-10 bg-card'>
           <Checkbox
             checked={isSelected}
             onCheckedChange={onSelect}
@@ -93,9 +94,18 @@ const GuestRow: React.FC<GuestRowProps> = ({
           />
         </td>
         <td className='px-2 sm:px-6 py-4 whitespace-nowrap'>
-          <div className='text-sm font-medium text-foreground'>{`${guest.firstName} ${guest.lastName}`}</div>
-          <div className='text-sm text-muted-foreground'>
-            {guest.phone || 'Sin teléfono'}
+          <div className='flex items-center gap-3'>
+            <GuestAvatar
+              firstName={guest.firstName}
+              lastName={guest.lastName}
+              size='md'
+            />
+            <div>
+              <div className='text-sm font-medium text-foreground'>{`${guest.firstName} ${guest.lastName}`}</div>
+              <div className='text-sm text-muted-foreground'>
+                {guest.phone || 'Sin teléfono'}
+              </div>
+            </div>
           </div>
         </td>
         <td className='px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-muted-foreground'>
@@ -146,7 +156,7 @@ const GuestRow: React.FC<GuestRowProps> = ({
             </Select>
           </div>
         </td>
-        <td className='px-2 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
+        <td className='px-2 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium sticky right-0 z-10 bg-card'>
           <Button
             onClick={onEdit}
             variant='ghost'
