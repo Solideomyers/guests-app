@@ -493,7 +493,7 @@ function AppContent() {
   // Render
   // ========================================
   return (
-    <div className='bg-slate-50 min-h-screen font-sans'>
+    <div className='min-h-screen bg-background text-foreground font-sans transition-colors'>
       <Toaster position='top-right' richColors />
       <Header />
       <main className='container mx-auto p-4 sm:p-6 lg:p-8'>
@@ -517,27 +517,27 @@ function AppContent() {
                 <StatsCard
                   title='Total Invitados'
                   value={stats.total || 0}
-                  colorClass='bg-blue-100 text-blue-600'
+                  colorClass='bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
                 />
                 <StatsCard
                   title='Pastores'
                   value={stats.pastors || 0}
-                  colorClass='bg-purple-100 text-purple-600'
+                  colorClass='bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400'
                 />
                 <StatsCard
                   title='Confirmados'
                   value={stats.confirmed || 0}
-                  colorClass='bg-green-100 text-green-600'
+                  colorClass='bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
                 />
                 <StatsCard
                   title='Pendientes'
                   value={stats.pending || 0}
-                  colorClass='bg-yellow-100 text-yellow-600'
+                  colorClass='bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400'
                 />
                 <StatsCard
                   title='Rechazados'
                   value={stats.declined || 0}
-                  colorClass='bg-red-100 text-red-600'
+                  colorClass='bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
                 />
               </>
             )}
@@ -545,7 +545,7 @@ function AppContent() {
         </div>
 
         {/* Main Content */}
-        <div className='bg-white rounded-lg shadow-md overflow-hidden'>
+        <div className='bg-card text-card-foreground rounded-lg shadow-md overflow-hidden border border-border transition-colors'>
           <div className='p-4 md:p-6 space-y-4'>
             {/* Bulk Actions or Regular Controls */}
             {selectedGuestIds.size > 0 ? (
@@ -566,7 +566,7 @@ function AppContent() {
                   />
                   <button
                     onClick={openAddModal}
-                    className='flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors'
+                    className='flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 border border-transparent rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors shadow-sm'
                   >
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
@@ -611,6 +611,7 @@ function AppContent() {
               isAllSelected={isAllSelected}
               onDeleteGuest={handleDeleteGuest}
               onEditGuest={handleEditGuest}
+              onAddGuest={openAddModal}
             />
           )}
 

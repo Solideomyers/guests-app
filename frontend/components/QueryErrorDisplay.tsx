@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '@/components/ui/button';
 
 interface QueryErrorDisplayProps {
   error: Error | null;
@@ -71,12 +72,9 @@ const QueryErrorDisplay: React.FC<QueryErrorDisplayProps> = ({
             <h3 className='text-lg font-semibold text-red-900 mb-2'>{title}</h3>
             <p className='text-sm text-red-700 mb-4'>{getErrorMessage()}</p>
             {onRetry && (
-              <button
-                onClick={onRetry}
-                className='px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors'
-              >
+              <Button onClick={onRetry} variant='destructive' size='default'>
                 Reintentar
-              </button>
+              </Button>
             )}
           </div>
         </div>

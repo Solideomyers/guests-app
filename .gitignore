@@ -46,3 +46,9 @@ Thumbs.db
 # Database
 backend/prisma/*.db
 backend/prisma/*.db-journal
+
+# Images
+*.png
+*.jpg
+*.jpeg
+*.gif

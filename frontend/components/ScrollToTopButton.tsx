@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 
 const ScrollToTopButton: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -29,28 +30,29 @@ const ScrollToTopButton: React.FC = () => {
   };
 
   return (
-    <button
+    <Button
       onClick={scrollToTop}
-      className={`fixed bottom-8 right-8 z-50 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-opacity duration-300 ${
+      size='icon'
+      className={`fixed bottom-8 right-8 z-50 shadow-lg transition-opacity duration-300 bg-blue-600 hover:bg-blue-700 text-white ${
         isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
-      aria-label="Go to top"
+      aria-label='Go to top'
     >
       <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
+        xmlns='http://www.w3.org/2000/svg'
+        fill='none'
+        viewBox='0 0 24 24'
         strokeWidth={2.5}
-        stroke="currentColor"
-        className="w-6 h-6"
+        stroke='currentColor'
+        className='w-6 h-6'
       >
         <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M12 19.5v-15m0 0l-6.75 6.75M12 4.5l6.75 6.75"
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          d='M12 19.5v-15m0 0l-6.75 6.75M12 4.5l6.75 6.75'
         />
       </svg>
-    </button>
+    </Button>
   );
 };
 

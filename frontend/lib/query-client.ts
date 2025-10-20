@@ -7,14 +7,14 @@ import { QueryClient } from '@tanstack/react-query';
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // Time before data is considered stale
-      staleTime: 3 * 60 * 1000, // 3 minutes
+      // Time before data is considered stale - increased to 10 minutes
+      staleTime: 10 * 60 * 1000, // 10 minutes
 
-      // Time before unused data is garbage collected
-      gcTime: 5 * 60 * 1000, // 5 minutes (formerly cacheTime)
+      // Time before unused data is garbage collected - increased to 30 minutes
+      gcTime: 30 * 60 * 1000, // 30 minutes (formerly cacheTime)
 
-      // Refetch data when window regains focus
-      refetchOnWindowFocus: true,
+      // Refetch data when window regains focus - only if stale
+      refetchOnWindowFocus: 'always',
 
       // Refetch data when reconnecting to the internet
       refetchOnReconnect: true,
@@ -22,15 +22,21 @@ export const queryClient = new QueryClient({
       // Don't refetch on mount if data is fresh
       refetchOnMount: false,
 
-      // Retry failed requests
-      retry: 1,
+      // Retry failed requests - increased retries
+      retry: 2,
 
       // Retry delay
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+
+      // Network mode - use cached data if offline
+      networkMode: 'offlineFirst',
     },
     mutations: {
-      // Retry failed mutations
-      retry: 0,
+      // Retry failed mutations once
+      retry: 1,
+
+      // Network mode for mutations
+      networkMode: 'online',
     },
   },
 });

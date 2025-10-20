@@ -1,6 +1,18 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { Guest } from '../types';
 import { useUIStore } from '../stores';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 /**
  * AddGuestModal Component
@@ -81,133 +93,125 @@ const AddGuestModal: React.FC<AddGuestModalProps> = ({
   }
 
   return (
-    <div
-      className='fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center'
-      onClick={onClose}
-    >
-      <div
-        className='bg-white rounded-xl shadow-xl w-full max-w-lg m-4'
-        onClick={(e) => e.stopPropagation()}
-      >
-        <form onSubmit={handleSubmit}>
-          <div className='p-6 sm:p-8'>
-            <div className='flex items-start gap-4'>
-              <div className='bg-blue-100 p-2 rounded-full'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                  strokeWidth={1.5}
-                  stroke='currentColor'
-                  className='w-6 h-6 text-blue-600'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766Z'
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className='text-xl font-semibold text-slate-800'>
-                  {guestToEdit ? 'Editar Invitado' : 'Añadir Nuevo Invitado'}
-                </h3>
-                <p className='text-sm text-slate-500 mt-1'>
-                  Completa los detalles del invitado a continuación.
-                </p>
-              </div>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className='sm:max-w-[600px] max-h-[90vh] overflow-hidden'>
+        <DialogHeader>
+          <DialogTitle className='flex items-center gap-3 text-gray-900'>
+            <div className='bg-blue-100 p-2 rounded-full'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth={1.5}
+                stroke='currentColor'
+                className='w-6 h-6 text-blue-600'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766Z'
+                />
+              </svg>
             </div>
+            {guestToEdit ? 'Editar Invitado' : 'Añadir Nuevo Invitado'}
+          </DialogTitle>
+          <DialogDescription>
+            Completa los detalles del invitado a continuación.
+          </DialogDescription>
+        </DialogHeader>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5 mt-6 max-h-[60vh] overflow-y-auto pr-3'>
-              <div>
-                <label className='text-sm font-semibold text-slate-700 block mb-1.5'>
-                  Nombre
-                </label>
-                <input
-                  name='firstName'
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  placeholder='Ej: Juan'
-                  className='p-2.5 h-11 border rounded-lg w-full bg-slate-50 border-slate-300 focus:ring-2 focus:ring-blue-500'
-                  required
+        <form onSubmit={handleSubmit}>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5 mt-2 max-h-[50vh] overflow-y-auto px-1'>
+            <div className='space-y-2'>
+              <Label htmlFor='firstName' className='text-gray-700 font-medium'>
+                Nombre *
+              </Label>
+              <Input
+                id='firstName'
+                name='firstName'
+                value={formData.firstName}
+                onChange={handleChange}
+                placeholder='Ej: Juan'
+                required
+              />
+            </div>
+            <div className='space-y-2'>
+              <Label htmlFor='lastName' className='text-gray-700 font-medium'>
+                Apellido
+              </Label>
+              <Input
+                id='lastName'
+                name='lastName'
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder='Ej: Pérez'
+              />
+            </div>
+            <div className='md:col-span-2 space-y-2'>
+              <Label htmlFor='church' className='text-gray-700 font-medium'>
+                Iglesia
+              </Label>
+              <Input
+                id='church'
+                name='church'
+                value={formData.church}
+                onChange={handleChange}
+                placeholder='Nombre de la iglesia'
+              />
+            </div>
+            <div className='space-y-2'>
+              <Label htmlFor='city' className='text-gray-700 font-medium'>
+                Ciudad
+              </Label>
+              <Input
+                id='city'
+                name='city'
+                value={formData.city}
+                onChange={handleChange}
+                placeholder='Ej: Santiago'
+              />
+            </div>
+            <div className='space-y-2'>
+              <Label htmlFor='phone' className='text-gray-700 font-medium'>
+                Teléfono
+              </Label>
+              <Input
+                id='phone'
+                name='phone'
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder='Ej: +1 809-123-4567'
+              />
+            </div>
+            <div className='md:col-span-2'>
+              <div className='flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-lg p-3 mt-2'>
+                <Checkbox
+                  id='isPastor'
+                  checked={formData.isPastor}
+                  onCheckedChange={(checked) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      isPastor: checked === true,
+                    }))
+                  }
                 />
-              </div>
-              <div>
-                <label className='text-sm font-semibold text-slate-700 block mb-1.5'>
-                  Apellido
-                </label>
-                <input
-                  name='lastName'
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  placeholder='Ej: Pérez'
-                  className='p-2.5 h-11 border rounded-lg w-full bg-slate-50 border-slate-300 focus:ring-2 focus:ring-blue-500'
-                />
-              </div>
-              <div className='md:col-span-2'>
-                <label className='text-sm font-semibold text-slate-700 block mb-1.5'>
-                  Iglesia
-                </label>
-                <input
-                  name='church'
-                  value={formData.church}
-                  onChange={handleChange}
-                  placeholder='Nombre de la iglesia'
-                  className='p-2.5 h-11 border rounded-lg w-full bg-slate-50 border-slate-300 focus:ring-2 focus:ring-blue-500'
-                />
-              </div>
-              <div>
-                <label className='text-sm font-semibold text-slate-700 block mb-1.5'>
-                  Ciudad
-                </label>
-                <input
-                  name='city'
-                  value={formData.city}
-                  onChange={handleChange}
-                  placeholder='Ej: Santiago'
-                  className='p-2.5 h-11 border rounded-lg w-full bg-slate-50 border-slate-300 focus:ring-2 focus:ring-blue-500'
-                />
-              </div>
-              <div>
-                <label className='text-sm font-semibold text-slate-700 block mb-1.5'>
-                  Teléfono
-                </label>
-                <input
-                  name='phone'
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder='Ej: +1 809-123-4567'
-                  className='p-2.5 h-11 border rounded-lg w-full bg-slate-50 border-slate-300 focus:ring-2 focus:ring-blue-500'
-                />
-              </div>
-              <div className='md:col-span-2'>
-                <div className='flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-lg p-3 mt-2'>
-                  <input
-                    type='checkbox'
-                    name='isPastor'
-                    id='isPastor'
-                    checked={formData.isPastor}
-                    onChange={handleChange}
-                    className='h-4 w-4 rounded border-slate-400 text-blue-600 focus:ring-blue-500'
-                  />
-                  <div>
-                    <label
-                      htmlFor='isPastor'
-                      className='text-sm font-semibold text-slate-800'
-                    >
-                      Es Pastor
-                    </label>
-                    <p className='text-xs text-slate-500'>
-                      Marque esta casilla si el invitado es un pastor.
-                    </p>
-                  </div>
+                <div className='flex-1'>
+                  <Label
+                    htmlFor='isPastor'
+                    className='text-sm font-semibold cursor-pointer text-gray-900'
+                  >
+                    Es Pastor
+                  </Label>
+                  <p className='text-xs text-gray-600'>
+                    Marque esta casilla si el invitado es un pastor.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
           {error && (
-            <div className='px-6 sm:px-8 pb-4'>
+            <div className='mt-4'>
               <div className='bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-3'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
@@ -228,17 +232,18 @@ const AddGuestModal: React.FC<AddGuestModalProps> = ({
             </div>
           )}
 
-          <div className='bg-slate-50 px-6 py-4 flex justify-end gap-3 rounded-b-xl border-t'>
-            <button
+          <DialogFooter className='mt-6'>
+            <Button
               type='button'
               onClick={onClose}
-              className='px-4 py-2 bg-white border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-100 text-sm'
+              variant='outline'
+              className='bg-white hover:bg-gray-50'
             >
               Cancelar
-            </button>
-            <button
+            </Button>
+            <Button
               type='submit'
-              className='px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 text-sm flex items-center gap-1.5'
+              className='flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white'
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -255,11 +260,11 @@ const AddGuestModal: React.FC<AddGuestModalProps> = ({
                 />
               </svg>
               {guestToEdit ? 'Guardar Cambios' : 'Añadir Invitado'}
-            </button>
-          </div>
+            </Button>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

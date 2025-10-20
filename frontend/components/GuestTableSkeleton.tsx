@@ -1,51 +1,60 @@
 import React from 'react';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const ROWS = 8;
 
 const GuestTableSkeleton: React.FC = () => {
   return (
-    <div className='overflow-x-auto animate-pulse'>
-      <table className='min-w-full divide-y divide-slate-200'>
-        <thead className='bg-slate-50'>
-          <tr>
-            <th className='p-4'>
-              <div className='h-4 w-4 bg-slate-200 rounded' />
-            </th>
-            <th className='px-2 sm:px-6 py-3'>
-              <div className='h-4 w-20 bg-slate-200 rounded' />
-            </th>
-            <th className='px-2 sm:px-6 py-3'>
-              <div className='h-4 w-20 bg-slate-200 rounded' />
-            </th>
-            <th className='px-2 sm:px-6 py-3'>
-              <div className='h-4 w-20 bg-slate-200 rounded' />
-            </th>
-            <th className='px-2 sm:px-6 py-3'>
-              <div className='h-4 w-20 bg-slate-200 rounded' />
-            </th>
-            <th className='px-2 sm:px-6 py-3'>
-              <div className='h-4 w-14 bg-slate-200 rounded' />
-            </th>
-            <th className='px-2 sm:px-6 py-3'>
-              <div className='h-4 w-16 bg-slate-200 rounded' />
-            </th>
-            <th className='px-2 sm:px-6 py-3'>
-              <div className='h-4 w-16 bg-slate-200 rounded' />
-            </th>
-          </tr>
-        </thead>
-        <tbody className='bg-white divide-y divide-slate-200'>
+    <div className='rounded-md border'>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className='w-12'>
+              <Skeleton className='h-4 w-4' />
+            </TableHead>
+            <TableHead>
+              <Skeleton className='h-4 w-20' />
+            </TableHead>
+            <TableHead>
+              <Skeleton className='h-4 w-20' />
+            </TableHead>
+            <TableHead>
+              <Skeleton className='h-4 w-20' />
+            </TableHead>
+            <TableHead>
+              <Skeleton className='h-4 w-20' />
+            </TableHead>
+            <TableHead>
+              <Skeleton className='h-4 w-14' />
+            </TableHead>
+            <TableHead>
+              <Skeleton className='h-4 w-16' />
+            </TableHead>
+            <TableHead className='w-24'>
+              <Skeleton className='h-4 w-16' />
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {Array.from({ length: ROWS }).map((_, i) => (
-            <tr key={i}>
+            <TableRow key={i}>
               {Array.from({ length: 8 }).map((_, j) => (
-                <td key={j} className='px-2 sm:px-6 py-4'>
-                  <div className='h-4 w-full bg-slate-100 rounded' />
-                </td>
+                <TableCell key={j}>
+                  <Skeleton className='h-4 w-full' />
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 };

@@ -69,7 +69,7 @@ const StatusFilter: React.FC = () => {
   };
 
   return (
-    <div className='flex items-center border-b border-slate-200 mb-4'>
+    <div className='flex items-center border-b border-slate-200 dark:border-slate-700 mb-4'>
       <nav className='-mb-px flex space-x-6' aria-label='Tabs'>
         {filterOptions.map((status) => {
           const isActive = activeFilter === status;
@@ -80,8 +80,8 @@ const StatusFilter: React.FC = () => {
               className={`whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm transition-colors duration-200
                 ${
                   isActive
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                    ? 'border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400'
+                    : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600'
                 }
               `}
               aria-current={isActive ? 'page' : undefined}
