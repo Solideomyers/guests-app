@@ -221,14 +221,23 @@ npm run build:backend
 - [HTTPS Security](HTTPS_SECURITY.md) - Production HTTPS setup (REQUIRED)
 - [Dashboard Design System](frontend/dashboard_design_system.md) - Design tokens
 - [Forms UI Guide](frontend/forms_ui_guide.md) - Form patterns
+- [**UI/UX Principles**](UI_UX_PRINCIPLES.md) - Complete 12 principles guide with implementation examples
 
 ### UX Principles Implemented
-Based on uidesign.tips methodology:
-- **#1-2:** Confirmation before destructive actions
-- **#3:** Empty states with clear CTAs
-- **#4:** Specific button labels
-- **#11:** Keyboard shortcuts
-- **#12:** Visual hierarchy (opacity, bold, scale)
+Based on uidesign.tips methodology - **[See full documentation →](UI_UX_PRINCIPLES.md)**
+
+12 core principles with 95%+ coverage:
+- **#1-2:** Confirmation before destructive actions ✅
+- **#3:** Empty states with clear CTAs ✅
+- **#4:** Specific button labels ✅
+- **#5:** Preventive validation (onChange) ✅
+- **#6:** Immediate visual feedback ✅
+- **#7:** Progressive disclosure ✅
+- **#8:** Touch optimization (≥44px) ✅
+- **#9:** Visual preview confirmation ✅
+- **#10:** Contextual CTAs ✅
+- **#11:** Keyboard shortcuts ✅
+- **#12:** Visual hierarchy ✅
 Backend exposes a REST API at `/api/v1`:
 
 ### Guests Endpoints
