@@ -34,9 +34,11 @@ backend/coverage-e2e
 .env.*.local
 frontend/.env
 frontend/.env.local
+frontend/.env.production
 backend/.env
 backend/.env.local
 backend/.env.test
+backend/.env.production
 
 # Editor directories and files
 .vscode/*

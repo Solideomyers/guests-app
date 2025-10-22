@@ -25,20 +25,30 @@ async function bootstrap() {
   // Get configuration service
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 3000);
-  const corsOrigin = configService.get<string>(
-    'CORS_ORIGIN',
-    'http://localhost:5173',
-  );
+  const nodeEnv = configService.get<string>('NODE_ENV', 'development');
 
-  // Enable CORS for multiple origins (localhost and network IP)
-  app.enableCors({
-    origin: [
-      corsOrigin,
+  // CORS configuration for production and development
+  const allowedOrigins = [];
+
+  if (nodeEnv === 'production') {
+    // Production: Only allow configured frontend URL
+    const frontendUrl = configService.get<string>('FRONTEND_URL');
+    if (frontendUrl) {
+      allowedOrigins.push(frontendUrl);
+    }
+  } else {
+    // Development: Allow local development URLs
+    allowedOrigins.push(
       'http://localhost:5173',
       'http://localhost:3001',
       'http://10.147.1.122:3001',
       /^http:\/\/10\.\d+\.\d+\.\d+:\d+$/, // Allow any local network IP
-    ],
+    );
+  }
+
+  // Enable CORS
+  app.enableCors({
+    origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
@@ -62,12 +72,22 @@ async function bootstrap() {
 
   await app.listen(port);
 
-  console.log(`
+  // Only log startup info in development
+  if (nodeEnv !== 'production') {
+    const corsDisplay =
+      allowedOrigins.length > 0
+        ? allowedOrigins.filter((o) => typeof o === 'string').join(', ')
+        : 'localhost:5173';
+
+    console.log(`
     🚀 Server is running on: http://localhost:${port}
     📡 API prefix: /${apiPrefix}/${apiVersion}
-    🌐 CORS enabled for: ${corsOrigin}
-    📦 Environment: ${configService.get<string>('NODE_ENV', 'development')}
-  `);
+    🌐 CORS enabled for: ${corsDisplay}
+    📦 Environment: ${nodeEnv}
+    `);
+  } else {
+    console.log(`Server started in production mode on port ${port}`);
+  }
 }
 
 bootstrap();
