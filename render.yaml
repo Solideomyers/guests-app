@@ -1,0 +1,23 @@
+# Render Configuration for Backend
+
+# Build Command
+npm install && npm run build
+
+# Start Command  
+npm run start:prod
+
+# Environment Variables (Set in Render Dashboard)
+NODE_ENV=production
+PORT=10000
+DATABASE_URL=<your-neon-or-render-postgres-url>
+REDIS_HOST=<your-redis-host>
+REDIS_PORT=6379
+FRONTEND_URL=https://your-app.vercel.app
+API_PREFIX=api
+API_VERSION=v1
+
+# Health Check Path
+/api/v1/guests
+
+# Auto-Deploy
+Yes (on push to main branch)

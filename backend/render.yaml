@@ -1,0 +1,43 @@
+services:
+  # Backend API Service
+  - type: web
+    name: guest-manager-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm run start:prod
+    healthCheckPath: /api/v1/guests
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: API_PREFIX
+        value: api
+      - key: API_VERSION
+        value: v1
+      - key: DATABASE_URL
+        sync: false # Set manually in Render dashboard
+      - key: FRONTEND_URL
+        sync: false # Set after Vercel deployment
+      - key: REDIS_HOST
+        sync: false # Set if using external Redis
+      - key: REDIS_PORT
+        value: 6379
+
+  # Redis Cache (Optional - can use external service)
+  # Render doesn't offer free Redis, use Upstash or Redis Cloud
+  # - type: redis
+  #   name: guest-manager-redis
+  #   plan: free  # Not available
+  #   maxmemoryPolicy: allkeys-lru
+
+databases:
+  # PostgreSQL Database (Optional - can use Neon)
+  - name: guest-manager-db
+    plan: free
+    databaseName: guestmanager
+    user: guestmanager
+    region: oregon
+    # Free tier: 90 days, then $7/month

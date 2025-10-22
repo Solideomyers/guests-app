@@ -1,59 +1,85 @@
 # 🚀 Quick Start: Deploy to Production
 
 **Time Required**: ~15 minutes  
-**Cost**: $0-5/month (Free tiers available)
+**Cost**: $0/month (100% FREE tiers)
 
 ---
 
 ## ⚡ Prerequisites
 
-```powershell
-# Install CLIs (run once)
-npm install -g vercel
-npm install -g @railway/cli
+### Create Free Accounts
+- ✅ [Vercel Account](https://vercel.com/signup)
+- ✅ [Render Account](https://render.com/register)
+- ✅ [Neon Account](https://neon.tech) (PostgreSQL)
+- ✅ [Upstash Account](https://upstash.com) (Redis)
 
-# Verify installations
+```powershell
+# Install Vercel CLI (run once)
+npm install -g vercel
+
+# Verify installation
 vercel --version
-railway --version
 ```
 
 ---
 
 ## 📦 Step-by-Step Deployment
 
-### 1️⃣ Backend to Railway (5 min)
+### 1️⃣ Setup Database & Redis (5 min)
 
-```powershell
-# Login
-railway login
+**Neon PostgreSQL (FREE - Always On)**:
+1. Go to [https://neon.tech](https://neon.tech)
+2. Create project: "guest-manager-db"
+3. Copy connection string:
+   ```
+   postgres://user:pass@host/db?sslmode=require
+   ```
 
-# Navigate to backend
-cd backend
+**Upstash Redis (FREE - 10K commands/day)**:
+1. Go to [https://upstash.com](https://upstash.com)
+2. Create database: "guest-manager-cache"
+3. Copy connection details (Host, Port, Password)
 
-# Initialize Railway project
-railway init
-# → Select "Create new project"
-# → Name: "guest-manager-backend"
+**Save these!** You'll need them for Render 📋
 
-# Add PostgreSQL database
-railway add --database postgresql
+---
 
-# Add Redis cache
-railway add --database redis
+### 2️⃣ Backend to Render (5 min)
 
-# Set environment variables
-railway variables set NODE_ENV=production
-railway variables set PORT=3000
+**Via Render Dashboard** (Easiest):
 
-# Deploy!
-railway up
+1. Go to [https://dashboard.render.com](https://dashboard.render.com)
+2. Click **"New +"** → **"Web Service"**
+3. Connect GitHub: `Solideomyers/guests-app`
+4. Configure:
+   - Name: `guest-manager-backend`
+   - Region: `Oregon` (or closest)
+   - Branch: `main`
+   - Root Directory: `backend`
+   - Build Command: `npm install && npm run build`
+   - Start Command: `npm run start:prod`
+   - Instance Type: **Free**
 
-# Get your backend URL
-railway domain
+5. Add Environment Variables:
+   ```bash
+   NODE_ENV=production
+   PORT=10000
+   DATABASE_URL=<paste-neon-url>
+   REDIS_HOST=<upstash-host>.upstash.io
+   REDIS_PORT=6379
+   REDIS_PASSWORD=<upstash-password>
+   FRONTEND_URL=https://temp.com
+   ```
+
+6. Click **"Create Web Service"**
+7. Wait ~5 minutes for first deploy
+
+**Get Backend URL**:
+```
+https://guest-manager-backend.onrender.com
 ```
 
-**Copy the Railway URL** - You'll need it next! 📋  
-Example: `https://guest-manager-backend-production.up.railway.app`
+**Copy this URL** - You'll need it next! 📋
 
 ---
 
@@ -79,7 +105,7 @@ vercel
 
 # Set environment variable
 vercel env add VITE_API_URL production
-# → Paste: https://your-backend.railway.app/api/v1
+# → Paste: https://guest-manager-backend.onrender.com/api/v1
 
 # Deploy to production
 vercel --prod
@@ -92,14 +118,11 @@ Example: `https://event-guest-manager.vercel.app`
 
 ### 3️⃣ Connect Frontend & Backend (2 min)
 
-```powershell
-# Update CORS in Railway backend
-railway variables set FRONTEND_URL=https://event-guest-manager.vercel.app
-
-# Redeploy backend to apply CORS
-cd backend
-railway up
-```
+**Update CORS in Render**:
+1. Go to Render Dashboard → Your service
+2. Click **"Environment"** tab
+3. Update `FRONTEND_URL`: `https://event-guest-manager.vercel.app`
+4. Click **"Save Changes"** (auto-redeploys)
 
 ---
 
@@ -107,36 +130,40 @@ railway up
 
 ### Test Backend
 ```powershell
-# Check health
-curl https://your-backend.railway.app/api/v1/guests
+# Check health (may take 30-60s if sleeping)
+curl https://guest-manager-backend.onrender.com/api/v1/guests
 ```
 
 ### Test Frontend
-1. Open: `https://your-app.vercel.app`
+1. Open: `https://event-guest-manager.vercel.app`
 2. Check browser console (F12) - should have no errors
 3. Try creating a guest - should work!
+
+### ⚠️ Note: Render Free Tier
+Backend sleeps after 15min inactivity. First request after sleep takes ~30-60s to wake up.
+
+**Solution**: Use [UptimeRobot](https://uptimerobot.com) (free) to ping every 10min and prevent sleep.
 
 ---
 
 ## 🎯 Quick Reference Commands
-
-### Redeploy Backend
-```powershell
-cd backend
-railway up
-```
 
 ### Redeploy Frontend
 ```powershell
 vercel --prod
 ```
 
+### Redeploy Backend
+Render auto-deploys on git push to `main` branch!
+
+Or manually in Render Dashboard:
+- Go to service → Click "Manual Deploy" → Deploy latest commit
+
 ### View Logs
 
-**Railway (Backend)**:
-```powershell
-railway logs --tail
-```
+**Render (Backend)**:
+- Go to: https://dashboard.render.com
+- Select service → Logs tab
 
 **Vercel (Frontend)**:
 - Go to: https://vercel.com/dashboard
@@ -147,12 +174,9 @@ railway logs --tail
 ## 🛠️ Troubleshooting
 
 ### CORS Error?
-```powershell
-# Update CORS with your Vercel URL
-railway variables set FRONTEND_URL=https://your-app.vercel.app
-cd backend
-railway up
-```
+1. Go to Render Dashboard → Your service → Environment
+2. Update `FRONTEND_URL` to match your Vercel URL exactly
+3. Save changes (auto-redeploys)
 
 ### API Not Working?
 ```powershell
@@ -162,27 +186,31 @@ vercel env ls
 # Update if needed
 vercel env rm VITE_API_URL production
 vercel env add VITE_API_URL production
-# → Paste: https://your-backend.railway.app/api/v1
+# → Paste: https://guest-manager-backend.onrender.com/api/v1
 
 # Redeploy
 vercel --prod
 ```
 
 ### Database Not Connected?
-```powershell
-# Check Railway services
-railway status
+1. Check `DATABASE_URL` in Render dashboard
+2. Must include `?sslmode=require` for Neon
+3. Run migrations in Render Shell:
+   ```bash
+   npx prisma migrate deploy
+   ```
 
-# Run migrations
-railway run npx prisma migrate deploy
-```
+### Backend Slow / 503 Error?
+⚠️ **Render free tier sleeps after 15min inactivity**
+
+Wait 30-60s for wake up, or setup UptimeRobot to prevent sleep.
 
 ---
 
 ## 📚 Full Documentation
 
 For detailed guides, see:
-- **[DEPLOYMENT_VERCEL_RAILWAY.md](DEPLOYMENT_VERCEL_RAILWAY.md)** - Complete deployment guide
+- **[DEPLOYMENT_RENDER_VERCEL.md](DEPLOYMENT_RENDER_VERCEL.md)** - Complete Render deployment guide
 - **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - All deployment options
 
 ---
@@ -192,15 +220,18 @@ For detailed guides, see:
 Your app is now live! 🚀
 
 **Share your URLs**:
-- Frontend: `https://your-app.vercel.app`
-- Backend API: `https://your-backend.railway.app/api/v1`
+- Frontend: `https://event-guest-manager.vercel.app`
+- Backend API: `https://guest-manager-backend.onrender.com/api/v1`
+
+**Cost**: **$0/month** (100% FREE!) 🎁
 
 **Next Steps**:
 1. ✅ Test all features in production
-2. ✅ Setup custom domain (optional)
-3. ✅ Enable monitoring (Sentry, LogRocket)
-4. ✅ Share with users!
+2. ✅ Setup [UptimeRobot](https://uptimerobot.com) to prevent backend sleep
+3. ✅ Setup custom domain (optional)
+4. ✅ Enable monitoring (Sentry, LogRocket)
+5. ✅ Share with users!
 
 ---
 
-**Need help?** Check [DEPLOYMENT_VERCEL_RAILWAY.md](DEPLOYMENT_VERCEL_RAILWAY.md) for detailed troubleshooting.
+**Need help?** Check [DEPLOYMENT_RENDER_VERCEL.md](DEPLOYMENT_RENDER_VERCEL.md) for detailed troubleshooting.
