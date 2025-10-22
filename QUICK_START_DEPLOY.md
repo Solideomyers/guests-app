@@ -56,7 +56,7 @@ vercel --version
    - Region: `Oregon` (or closest)
    - Branch: `main`
    - Root Directory: `backend`
-   - Build Command: `npm install && npm run build`
+   - Build Command: `npm ci --include=dev && npx prisma generate && npm run build`
    - Start Command: `npm run start:prod`
    - Instance Type: **Free**
 

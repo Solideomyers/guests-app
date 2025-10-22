@@ -127,7 +127,7 @@ vercel --version
    - Branch: `main`
    - Root Directory: `backend`
    - Runtime: `Node`
-   - Build Command: `npm install && npm run build`
+   - Build Command: `npm ci --include=dev && npx prisma generate && npm run build`
    - Start Command: `npm run start:prod`
    - Instance Type: `Free`
 
