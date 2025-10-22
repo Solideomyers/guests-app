@@ -142,8 +142,14 @@ vercel --version
    REDIS_HOST=<upstash-hostname>.upstash.io
    REDIS_PORT=6379
    REDIS_PASSWORD=<upstash-password>
+   REDIS_TLS=true
    FRONTEND_URL=https://temporary-value.com
    ```
+
+   **⚠️ CRITICAL**: 
+   - `REDIS_HOST` must be ONLY the hostname (no `https://`, no `rediss://`)
+   - `REDIS_TLS=true` is **required** for Upstash connections
+   - Without `REDIS_TLS`, connections will fail with ENOTFOUND errors
 
    **Note**: We'll update `FRONTEND_URL` after deploying to Vercel.
 
@@ -357,12 +363,21 @@ npx prisma db push
 
 ### Issue: Redis Connection Failed
 
-**Check Upstash credentials in Render**:
+**Symptom**: Errors like `getaddrinfo ENOTFOUND https://your-redis.upstash.io`
+
+**Solution**: Check Upstash credentials in Render Environment:
 ```bash
-REDIS_HOST=<hostname>.upstash.io  # No http:// or https://
+REDIS_HOST=<hostname>.upstash.io  # ⚠️ ONLY hostname, no https://, no rediss://
 REDIS_PORT=6379
 REDIS_PASSWORD=<password>
+REDIS_TLS=true                     # ⚠️ REQUIRED for Upstash
 ```
+
+**Common Mistakes**:
+- ❌ `REDIS_HOST=https://hostname.upstash.io` (includes protocol)
+- ❌ `REDIS_HOST=rediss://default:pass@hostname.upstash.io:6379` (full URL)
+- ❌ Missing `REDIS_TLS=true` variable
+- ✅ `REDIS_HOST=hostname.upstash.io` (correct)
 
 ### Issue: Build Fails on Render
 
