@@ -1,23 +1,27 @@
-# Render Configuration for Backend
-
-# Build Command
-npm install && npm run build
-
-# Start Command  
-npm run start:prod
-
-# Environment Variables (Set in Render Dashboard)
-NODE_ENV=production
-PORT=10000
-DATABASE_URL=<your-neon-or-render-postgres-url>
-REDIS_HOST=<your-redis-host>
-REDIS_PORT=6379
-FRONTEND_URL=https://your-app.vercel.app
-API_PREFIX=api
-API_VERSION=v1
-
-# Health Check Path
-/api/v1/guests
-
-# Auto-Deploy
-Yes (on push to main branch)
+services:
+  # Backend API Service
+  - type: web
+    name: guest-manager-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd backend && npm ci --include=dev && npx prisma generate && npm run build
+    startCommand: cd backend && npm run start:prod
+    healthCheckPath: /api/v1/guests
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: API_PREFIX
+        value: api
+      - key: API_VERSION
+        value: v1
+      - key: DATABASE_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: REDIS_HOST
+        sync: false
+      - key: REDIS_PORT
+        value: 6379
