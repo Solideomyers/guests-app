@@ -1,6 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useUIStore } from '../stores';
 import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { Moon, Sun, Monitor } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -68,72 +74,96 @@ const DarkModeToggle: React.FC = () => {
 
   const Icon = getCurrentIcon();
 
+  const getTooltipText = () => {
+    if (themeMode === 'light') return 'Tema claro - Haz clic para cambiar';
+    if (themeMode === 'dark') return 'Tema oscuro - Haz clic para cambiar';
+    return 'Tema del sistema - Haz clic para cambiar';
+  };
+
   return (
-    <div className='relative' ref={menuRef}>
-      <Button
-        variant='ghost'
-        size='icon'
-        onClick={() => setIsOpen(!isOpen)}
-        className='relative h-10 w-10 rounded-lg hover:bg-accent transition-all duration-300'
-        aria-label='Cambiar tema'
-        aria-haspopup='true'
-        aria-expanded={isOpen ? 'true' : 'false'}
-      >
-        <Icon className='h-5 w-5 text-primary transition-transform duration-300' />
-        <span className='sr-only'>Cambiar tema</span>
-      </Button>
-
-      {isOpen && (
-        <div
-          className={cn(
-            'absolute right-0 top-full z-50 mt-2 w-40 rounded-lg border bg-popover shadow-lg',
-            'animate-in fade-in-0 zoom-in-95 slide-in-from-top-2'
-          )}
-          role='menu'
-        >
-          <div className='p-1'>
-            <button
-              onClick={() => handleThemeChange('light')}
-              className={cn(
-                'flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm',
-                'transition-colors hover:bg-accent',
-                themeMode === 'light' && 'bg-accent text-accent-foreground'
-              )}
-              role='menuitem'
+    <TooltipProvider>
+      <div className='relative' ref={menuRef}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant='ghost'
+              size='icon'
+              onClick={() => setIsOpen(!isOpen)}
+              className='relative h-10 w-10 rounded-lg hover:bg-accent transition-all duration-300'
+              aria-label='Cambiar tema'
+              aria-haspopup='true'
+              aria-expanded={isOpen ? 'true' : 'false'}
             >
-              <Sun className='h-4 w-4' />
-              <span>Claro</span>
-            </button>
+              <Icon className='h-5 w-5 text-primary transition-transform duration-300' />
+              <span className='sr-only'>Cambiar tema</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side='bottom'>
+            <p className='flex items-center gap-2'>
+              {getTooltipText()}
+              <kbd className='px-2 py-1 text-xs font-semibold text-muted-foreground bg-muted border border-border rounded'>
+                {themeMode === 'light'
+                  ? '☀️'
+                  : themeMode === 'dark'
+                    ? '🌙'
+                    : '💻'}
+              </kbd>
+            </p>
+          </TooltipContent>
+        </Tooltip>
 
-            <button
-              onClick={() => handleThemeChange('dark')}
-              className={cn(
-                'flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm',
-                'transition-colors hover:bg-accent',
-                themeMode === 'dark' && 'bg-accent text-accent-foreground'
-              )}
-              role='menuitem'
-            >
-              <Moon className='h-4 w-4' />
-              <span>Oscuro</span>
-            </button>
+        {isOpen && (
+          <div
+            className={cn(
+              'absolute right-0 top-full z-50 mt-2 w-40 rounded-lg border bg-popover shadow-lg',
+              'animate-in fade-in-0 zoom-in-95 slide-in-from-top-2'
+            )}
+            role='menu'
+          >
+            <div className='p-1'>
+              <button
+                onClick={() => handleThemeChange('light')}
+                className={cn(
+                  'flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm',
+                  'transition-colors hover:bg-accent',
+                  themeMode === 'light' && 'bg-accent text-accent-foreground'
+                )}
+                role='menuitem'
+              >
+                <Sun className='h-4 w-4' />
+                <span>Claro</span>
+              </button>
 
-            <button
-              onClick={() => handleThemeChange('system')}
-              className={cn(
-                'flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm',
-                'transition-colors hover:bg-accent',
-                themeMode === 'system' && 'bg-accent text-accent-foreground'
-              )}
-              role='menuitem'
-            >
-              <Monitor className='h-4 w-4' />
-              <span>Sistema</span>
-            </button>
+              <button
+                onClick={() => handleThemeChange('dark')}
+                className={cn(
+                  'flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm',
+                  'transition-colors hover:bg-accent',
+                  themeMode === 'dark' && 'bg-accent text-accent-foreground'
+                )}
+                role='menuitem'
+              >
+                <Moon className='h-4 w-4' />
+                <span>Oscuro</span>
+              </button>
+
+              <button
+                onClick={() => handleThemeChange('system')}
+                className={cn(
+                  'flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm',
+                  'transition-colors hover:bg-accent',
+                  themeMode === 'system' && 'bg-accent text-accent-foreground'
+                )}
+                role='menuitem'
+              >
+                <Monitor className='h-4 w-4' />
+                <span>Sistema</span>
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </TooltipProvider>
   );
 };
 

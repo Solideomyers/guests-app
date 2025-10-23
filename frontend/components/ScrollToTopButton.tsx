@@ -33,10 +33,12 @@ const ScrollToTopButton: React.FC = () => {
     <Button
       onClick={scrollToTop}
       size='icon'
-      className={`fixed bottom-8 right-8 z-50 shadow-lg transition-opacity duration-300 bg-primary hover:bg-primary/90 text-primary-foreground ${
-        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      className={`fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50 h-12 w-12 rounded-full shadow-lg transition-all duration-300 bg-primary hover:bg-primary/90 hover:scale-110 text-primary-foreground ${
+        isVisible
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 translate-y-4 pointer-events-none'
       }`}
-      aria-label='Go to top'
+      aria-label='Ir arriba'
     >
       <svg
         xmlns='http://www.w3.org/2000/svg'

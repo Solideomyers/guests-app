@@ -20,45 +20,50 @@ const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
   if (selectedCount === 0) return null;
 
   return (
-    <div className='bg-accent/10 border border-accent rounded-lg p-3 flex flex-col items-center sm:flex-row sm:justify-between gap-4'>
-      <div className='flex items-center gap-3'>
-        <Button
-          onClick={onClearSelection}
-          variant='ghost'
-          size='icon'
-          className='text-accent-foreground hover:text-foreground'
-          aria-label='Clear selection'
-        >
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
-            strokeWidth={1.5}
-            stroke='currentColor'
-            className='w-6 h-6'
+    <div className='bg-accent/10 border border-accent rounded-lg p-3 sm:p-4 flex flex-col gap-3 sm:gap-4'>
+      {/* Header: Selection count and clear button */}
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-2'>
+          <Button
+            onClick={onClearSelection}
+            variant='ghost'
+            size='sm'
+            className='h-8 w-8 p-0 text-accent-foreground hover:text-foreground'
+            aria-label='Clear selection'
           >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              d='M6 18 18 6M6 6l12 12'
-            />
-          </svg>
-        </Button>
-        <span className='text-sm font-medium text-foreground'>
-          {selectedCount} seleccionado(s)
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth={1.5}
+              stroke='currentColor'
+              className='w-4 h-4'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M6 18 18 6M6 6l12 12'
+              />
+            </svg>
+          </Button>
+          <span className='text-sm font-medium text-foreground'>
+            {selectedCount} seleccionado(s)
+          </span>
+        </div>
+        <span className='hidden sm:inline text-xs text-muted-foreground'>
+          Acciones en lote
         </span>
       </div>
-      <div className='flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto'>
-        <span className='text-sm text-muted-foreground mr-2'>
-          Acciones en lote:
-        </span>
-        <div className='flex items-center gap-2'>
+
+      {/* Actions: Stacked on mobile, horizontal on desktop */}
+      <div className='flex flex-col gap-2 w-full'>
+        <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full'>
           <select
             onChange={(e) => {
               onChangeStatus(e.target.value as AttendanceStatus);
               e.target.value = '';
             }}
-            className='px-3 py-1.5 text-sm border-input rounded-md focus:ring-ring focus:border-ring bg-background text-foreground'
+            className='w-full sm:w-auto px-3 py-2 text-sm border border-input rounded-md focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground'
             defaultValue=''
             aria-label='Change status for selected guests'
           >
@@ -69,29 +74,34 @@ const BulkActionsToolbar: React.FC<BulkActionsToolbarProps> = ({
             <option value={AttendanceStatus.PENDING}>Pendiente</option>
             <option value={AttendanceStatus.DECLINED}>Rechazado</option>
           </select>
-          <div className='flex items-center'>
+        </div>
+
+        <div className='flex flex-col sm:flex-row gap-2 w-full'>
+          <div className='flex items-center gap-0 w-full sm:w-auto'>
             <Button
               onClick={() => onSetPastorStatus(true)}
               variant='outline'
               size='sm'
-              className='rounded-r-none'
+              className='flex-1 sm:flex-none rounded-r-none text-xs sm:text-sm'
             >
-              Marcar Pastor
+              <span className='hidden sm:inline'>Marcar Pastor</span>
+              <span className='sm:hidden'>✓ Pastor</span>
             </Button>
             <Button
               onClick={() => onSetPastorStatus(false)}
               variant='outline'
               size='sm'
-              className='rounded-l-none border-l'
+              className='flex-1 sm:flex-none rounded-l-none border-l text-xs sm:text-sm'
             >
-              Quitar Pastor
+              <span className='hidden sm:inline'>Quitar Pastor</span>
+              <span className='sm:hidden'>✗ Pastor</span>
             </Button>
           </div>
           <Button
             onClick={onDelete}
             variant='destructive'
             size='sm'
-            className='flex items-center gap-1.5'
+            className='flex items-center justify-center gap-1.5 w-full sm:w-auto'
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
