@@ -70,12 +70,11 @@ interface UIState {
   viewMode: 'table' | 'grid';
   sortBy: string;
   sortOrder: 'asc' | 'desc';
-  darkMode: boolean;
+  themeMode: 'light' | 'dark' | 'system';
 
   setViewMode: (mode: 'table' | 'grid') => void;
   setSorting: (by: string, order: 'asc' | 'desc') => void;
-  toggleDarkMode: () => void;
-  setDarkMode: (enabled: boolean) => void;
+  setThemeMode: (mode: 'light' | 'dark' | 'system') => void;
 }
 
 export const useUIStore = create<UIState>()(
@@ -173,12 +172,11 @@ export const useUIStore = create<UIState>()(
       viewMode: 'table',
       sortBy: 'createdAt',
       sortOrder: 'desc',
-      darkMode: false,
+      themeMode: 'system',
 
       setViewMode: (mode) => set({ viewMode: mode }),
       setSorting: (by, order) => set({ sortBy: by, sortOrder: order }),
-      toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
-      setDarkMode: (enabled) => set({ darkMode: enabled }),
+      setThemeMode: (mode) => set({ themeMode: mode }),
     }),
     {
       name: 'guest-ui-store', // LocalStorage key
@@ -188,7 +186,7 @@ export const useUIStore = create<UIState>()(
         pageSize: state.pageSize,
         sortBy: state.sortBy,
         sortOrder: state.sortOrder,
-        darkMode: state.darkMode,
+        themeMode: state.themeMode,
       }),
     }
   )
