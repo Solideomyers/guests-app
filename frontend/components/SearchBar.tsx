@@ -64,7 +64,11 @@ const SearchBar: React.FC = () => {
         placeholder='Buscar por nombre, iglesia, ciudad...'
         value={localValue}
         onChange={handleChange}
-        className='pl-10 pr-10'
+        className='pl-10 pr-10 text-base md:text-sm h-11 md:h-10'
+        autoComplete='off'
+        autoCorrect='off'
+        autoCapitalize='off'
+        spellCheck='false'
       />
       {localValue && (
         <button

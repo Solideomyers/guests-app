@@ -1,4 +1,6 @@
 import React from 'react';
+import { ExportMenu } from './ExportMenu';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import { Button } from '@/components/ui/button';
 
 interface ExportButtonsProps {
@@ -10,13 +12,21 @@ const ExportButtons: React.FC<ExportButtonsProps> = ({
   onExportCSV,
   onExportPDF,
 }) => {
+  const isMobile = useMediaQuery('(max-width: 640px)');
+
+  // En mobile, usar el menú dropdown
+  if (isMobile) {
+    return <ExportMenu onExportCSV={onExportCSV} onExportPDF={onExportPDF} />;
+  }
+
+  // En desktop, mostrar los botones normales
   return (
     <div className='flex items-center gap-2'>
       <Button
         onClick={onExportCSV}
         variant='outline'
         size='default'
-        className='flex items-center gap-2 w-full sm:w-auto'
+        className='flex items-center gap-2'
         aria-label='Exportar a CSV'
       >
         <svg
@@ -39,7 +49,7 @@ const ExportButtons: React.FC<ExportButtonsProps> = ({
         onClick={onExportPDF}
         variant='outline'
         size='default'
-        className='flex items-center gap-2 w-full sm:w-auto'
+        className='flex items-center gap-2'
         aria-label='Exportar a PDF'
       >
         <svg

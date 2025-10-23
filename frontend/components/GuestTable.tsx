@@ -6,7 +6,9 @@ import {
   SortableGuestKeys,
 } from '../types';
 import GuestRow from './GuestRow';
+import { GuestCard } from './GuestCard';
 import { EmptyState } from './EmptyState';
+import { useIsMobile } from '../hooks/useMediaQuery';
 import {
   Table,
   TableHeader,
@@ -70,6 +72,8 @@ const GuestTable: React.FC<GuestTableProps> = ({
   onEditGuest,
   onAddGuest,
 }) => {
+  const isMobile = useIsMobile();
+
   // UX Principio #3: Mostrar EmptyState cuando no hay invitados
   // NOTA: Validación separada de filtros vs sin datos
   const hasNoGuests = guests.length === 0;
@@ -79,6 +83,27 @@ const GuestTable: React.FC<GuestTableProps> = ({
     return <EmptyState onAddGuest={onAddGuest} />;
   }
 
+  // Vista móvil: Cards
+  if (isMobile) {
+    return (
+      <div className='space-y-4 pb-4'>
+        {guests.map((guest) => (
+          <GuestCard
+            key={guest.id}
+            guest={guest}
+            isSelected={selectedGuests.has(guest.id)}
+            onSelect={onSelectGuest}
+            onEdit={onEditGuest}
+            onDelete={onDeleteGuest}
+            onStatusChange={onUpdateStatus}
+            onTogglePastorStatus={onTogglePastorStatus}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  // Vista desktop: Tabla
   return (
     <div className='rounded-md border border-border overflow-x-auto'>
       <Table className='min-w-[800px]'>
