@@ -150,13 +150,17 @@ npm run build:backend
 
 #### Data Management
 - ✅ Complete CRUD for guests
+- ✅ **Combined Filters** (v1.1.2) - Multi-criteria filtering with AND logic
+  - Filter by Search, Status, Pastor, Church, and City simultaneously
+  - Visual badges showing active filters with individual removal
+  - "Limpiar todos" button for quick reset
 - ✅ Advanced filtering & search
 - ✅ Pagination & sorting
 - ✅ Bulk operations (status update, delete)
 - ✅ Soft delete with audit trail
 - ✅ Guest statistics dashboard
 - ✅ Audit history tracking
-- ✅ Export to CSV/PDF
+- ✅ Export to CSV/PDF with dropdown menu (mobile-optimized)
 
 #### Performance & Caching
 - ✅ Redis caching for performance
@@ -167,11 +171,24 @@ npm run build:backend
 
 #### User Experience
 - ✅ **Dark Matter OKLCH Theme** - Modern, vibrant color palette
-- ✅ **Dark/Light Mode** - Smooth toggle with animations
+- ✅ **3-Mode Theme System** (v1.1.0) - Light/Dark/System with smooth transitions
+- ✅ **Mobile-First Design** (v1.1.0)
+  - Card-based layout for mobile viewports
+  - Touch-optimized interactions (≥44px targets)
+  - Responsive breakpoints with adaptive UI
+- ✅ **Combined Filters** (v1.1.2)
+  - Multi-criteria filtering (Pastor, Church, City)
+  - ActiveFiltersBadges component with visual feedback
+  - AdditionalFilters component with 3 dropdowns
+- ✅ **Mobile UX Refinements** (v1.1.1)
+  - Responsive BulkActionsToolbar with stacked layout
+  - Theme toggle tooltip with visual feedback
+  - DeleteConfirmDialog on mobile guest cards
+  - ScrollToTopButton with 48px sizing and animations
+  - Smooth theme transitions (0.3s ease)
 - ✅ **Form Validations** - Real-time with react-hook-form + Zod
 - ✅ **Preview Confirmation** - 2-step process before saving
 - ✅ **Avatar System** - Initials-based with 12 themed colors
-- ✅ **Mobile Responsive** - Full responsive with touch optimization
 - ✅ **Keyboard Shortcuts** - Ctrl+N (add), Escape (close)
 - ✅ **Custom Scrollbar** - Themed for consistency
 - ✅ **CTA Banner** - Conditional smart prompts
@@ -203,6 +220,38 @@ npm run build:backend
 
 #### Deployment
 ## 📖 Documentation
+
+### 📦 Release History
+
+#### v1.1.2 - Combined Filters (October 23, 2025) ⭐ **LATEST**
+- **Combined Filters System** - Multi-criteria filtering with AND logic
+- **ActiveFiltersBadges** - Visual badges showing active filters with removal
+- **Enhanced AdditionalFilters** - 3 filter dropdowns (Pastor, Church, City)
+- **Hotfix**: Fixed Radix UI SelectItem empty value error
+- [Full Release Notes](RELEASE_NOTES_v1.1.2.md) | [GitHub Release](https://github.com/Solideomyers/guests-app/releases/tag/v1.1.2)
+
+#### v1.1.1 - Mobile UX Refinements (October 23, 2025)
+- Responsive BulkActionsToolbar with stacked layout on mobile
+- Theme toggle tooltip with visual feedback (UX principle #6)
+- DeleteConfirmDialog integration in mobile guest cards
+- ScrollToTopButton mobile styling (48px, rounded, 16px positioning)
+- Smooth theme transitions (0.3s ease animations)
+- [GitHub Release](https://github.com/Solideomyers/guests-app/releases/tag/v1.1.1)
+
+#### v1.1.0 - Mobile UX Improvements (October 23, 2025)
+- GuestCard component for mobile-optimized guest view
+- ExportMenu dropdown for unified CSV/PDF export
+- useMediaQuery hook for responsive detection
+- 3-mode theme system (light/dark/system)
+- Better touch targets and mobile spacing
+- [GitHub Release](https://github.com/Solideomyers/guests-app/releases/tag/v1.1.0)
+
+#### v1.0.0 - Initial Production Release (October 2025)
+- Full-stack deployment (Vercel + Render)
+- PostgreSQL (Neon) + Redis (Upstash)
+- Complete CRUD, caching, exports
+- Dark Matter OKLCH theme
+- [GitHub Release](https://github.com/Solideomyers/guests-app/releases/tag/v1.0.0)
 
 ### Comprehensive Guides
 - [Frontend README](frontend/README.md) - Frontend architecture & components
