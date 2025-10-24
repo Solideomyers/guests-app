@@ -89,12 +89,17 @@ const AdditionalFilters: React.FC = () => {
         >
           Filtrar por Iglesia
         </Label>
-        <Select value={churchFilter} onValueChange={setChurchFilter}>
+        <Select
+          value={churchFilter || '__all__'}
+          onValueChange={(value) =>
+            setChurchFilter(value === '__all__' ? '' : value)
+          }
+        >
           <SelectTrigger id='church-filter' className='w-full'>
             <SelectValue placeholder='Todas las iglesias' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value=''>Todas las iglesias</SelectItem>
+            <SelectItem value='__all__'>Todas las iglesias</SelectItem>
             {uniqueChurches.map((church) => (
               <SelectItem key={church} value={church}>
                 {church}
@@ -109,12 +114,17 @@ const AdditionalFilters: React.FC = () => {
         <Label htmlFor='city-filter' className='text-sm font-medium mb-2 block'>
           Filtrar por Ciudad
         </Label>
-        <Select value={cityFilter} onValueChange={setCityFilter}>
+        <Select
+          value={cityFilter || '__all__'}
+          onValueChange={(value) =>
+            setCityFilter(value === '__all__' ? '' : value)
+          }
+        >
           <SelectTrigger id='city-filter' className='w-full'>
             <SelectValue placeholder='Todas las ciudades' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value=''>Todas las ciudades</SelectItem>
+            <SelectItem value='__all__'>Todas las ciudades</SelectItem>
             {uniqueCities.map((city) => (
               <SelectItem key={city} value={city}>
                 {city}
