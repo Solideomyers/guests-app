@@ -22,6 +22,8 @@ import ExportButtons from './components/ExportButtons';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import BulkActionsToolbar from './components/BulkActionsToolbar';
 import CTABanner from './components/CTABanner';
+import AdditionalFilters from './components/AdditionalFilters';
+import ActiveFiltersBadges from './components/ActiveFiltersBadges';
 import {
   Tooltip,
   TooltipContent,
@@ -160,6 +162,10 @@ function AppContent() {
     sortBy,
     sortOrder,
     setSorting,
+    // Combined filters (Fix #6)
+    isPastorFilter,
+    cityFilter,
+    churchFilter,
   } = useUIStore();
 
   // ========================================
@@ -192,6 +198,10 @@ function AppContent() {
     status: statusFilter === 'ALL' ? undefined : statusFilter,
     sortBy,
     sortOrder: sortOrder,
+    // Combined filters (Fix #6: v1.1.2)
+    isPastor: isPastorFilter !== null ? isPastorFilter : undefined,
+    city: cityFilter || undefined,
+    church: churchFilter || undefined,
   });
 
   const {
@@ -660,6 +670,12 @@ function AppContent() {
 
             {/* Status Filter */}
             <StatusFilter />
+
+            {/* Additional Filters (Fix #6: v1.1.2) */}
+            <AdditionalFilters />
+
+            {/* Active Filters Badges (Fix #6: v1.1.2) */}
+            <ActiveFiltersBadges />
           </div>
 
           {/* Guest Table or Skeleton */}
